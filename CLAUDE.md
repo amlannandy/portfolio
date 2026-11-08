@@ -10,9 +10,9 @@ This is the personal website of a software engineer. It presents who they are, w
 
 The two blogs are separate sections, each with its own listing and post pages. They are not one blog filtered by tag, so don't merge their routes, data or styling by default.
 
-Blog posts are written in **MDX only**, stored in the repo. Don't introduce a CMS or other content formats.
+Every page must work on both mobile and desktop. Responsive layout is a requirement, not a polish step; see Breakpoints and responsive rules.
 
-Not decided yet (ask before assuming): the visual design (settled later; see Styling & Theming) and the exact post URL format under each blog (for example `/blogs/tech/<slug>`). Where MDX files live and how they are loaded, plus the SEO rules, are in the Content and data section.
+Blog posts are written in **MDX only**, stored in the repo. Don't introduce a CMS or other content formats.
 
 ## NOTE: This is NOT the Next.js you know
 
@@ -189,10 +189,24 @@ Supports the system preference plus a manual toggle (light, dark, or system).
 
 ### Breakpoints and responsive rules
 
-- Mobile first: base styles target small screens; add `min-width` queries going up.
-- Breakpoints are Sass variables in `_breakpoints.scss` (values TBD; typical: 640 / 768 / 1024 / 1280 px) used through one mixin, e.g. `@include bp.up(md) { ... }`. Media queries can't read CSS variables, so don't put breakpoints in `:root`.
-- Use relative units (`rem`, `%`, `clamp()`) for type and layout; `px` only for borders and hairlines.
+- Mobile first: base styles target small screens (down to 320px wide); add `min-width` queries going up. Never write `max-width` queries.
+- Breakpoints are Sass variables in `_breakpoints.scss`, used only through the `bp.up(<name>)` mixin, e.g. `@include bp.up(md) { ... }`. Media queries can't read CSS variables, so don't put breakpoints in `:root`, and don't write raw pixel media queries in components.
+
+| Name | Min width | Typical target           |
+| ---- | --------- | ------------------------ |
+| `sm` | 640px     | Large phones (landscape) |
+| `md` | 768px     | Tablets                  |
+| `lg` | 1024px    | Laptops                  |
+| `xl` | 1280px    | Desktops                 |
+
+- Below `sm` is the base (phone) style. Content width is capped by a max-width container token on wide screens, so lines stay readable.
+- Use relative units (`rem`, `%`, `clamp()`) for type and layout; `px` only for borders and hairlines. Prefer fluid layouts (flex, grid, `clamp()`) over adding more breakpoints.
+- No horizontal page scroll at any width. Wide content (code blocks, tables, embeds) scrolls inside its own container with `overflow-x: auto`.
+- Tap targets are at least 44 x 44px. Nothing may work only on hover; hover effects are enhancements, wrapped in `@media (hover: hover)`.
+- Navigation collapses into an accessible menu on small screens (button with `aria-expanded`, keyboard operable, closes on Escape).
+- Images use `next/image` with a `sizes` prop that matches the layout, so phones don't download desktop-sized files.
 - Respect `prefers-reduced-motion`: wrap non-essential animation in `@media (prefers-reduced-motion: no-preference)`.
+- Check every new or changed layout at a phone width (about 375px) and a desktop width (about 1280px) before considering it done. E2E tests already run in both a desktop and a mobile browser (see Testing).
 
 ### Don'ts
 
