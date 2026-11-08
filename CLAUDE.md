@@ -5,12 +5,14 @@ This is a portfolio web app built on top of Next.js.
 This is the personal website of a software engineer. It presents who they are, what they have built, and what they write about. The site has three areas:
 
 - **Portfolio**: introduction, projects, experience, skills and contact details.
-- **Technical blog**: posts about software engineering.
-- **Travel blog**: posts about travel, kept separate from the technical blog.
+- **Technical blog**: posts about software engineering, at `/blogs/tech`.
+- **Travel blog**: posts about travel, kept separate from the technical blog, at `/blogs/travel`.
 
 The two blogs are separate sections, each with its own listing and post pages. They are not one blog filtered by tag, so don't merge their routes, data or styling by default.
 
-Not decided yet (ask before assuming): how blog posts are authored (for example MDX files in the repo or a CMS), the URL structure for the two blogs, and the visual design. These will be settled in the Content and data, Routing and SEO, and Styling & Theming sections.
+Blog posts are written in **MDX only**, stored in the repo. Don't introduce a CMS or other content formats.
+
+Not decided yet (ask before assuming): the visual design (settled later; see Styling & Theming) and the exact post URL format under each blog (for example `/blogs/tech/<slug>`). Where MDX files live and how they are loaded is in the Content and data section; the routes and SEO will be written up in Routing and SEO.
 
 ## NOTE: This is NOT the Next.js you know
 
@@ -73,11 +75,13 @@ src/
   components/     (planned)
     ui/           Small reusable primitives (Button, Card, Tag)
     sections/     Page-level blocks (Hero, About, Projects, Experience, Contact)
+  content/        (planned) Blog posts as MDX: tech/<slug>.mdx, travel/<slug>.mdx
   data/           (planned) Typed content (projects, experience, socials) as TS, not hardcoded in JSX
   lib/            (planned) Pure helpers and utilities
   hooks/          (planned) Client-side React hooks
-  types/          (planned) Shared TypeScript types
+  types/          (exists) Shared TypeScript types (mdx.d.ts types MDX frontmatter)
   styles/         (planned) Sass-only helpers: _breakpoints.scss, _mixins.scss
+  mdx-components.tsx  (exists) Required by @next/mdx: maps MDX elements to components
 public/           (exists) Static assets served at /
 ```
 
@@ -232,12 +236,50 @@ Unit and component tests use **Vitest** and **React Testing Library**. End-to-en
 - Test files are linted, formatted and typechecked like any other code.
 - Tests do **not** run in the pre-commit hook, so run them yourself (see Commands) before considering work done.
 
+## Content and data
+
+There are two kinds of content, stored differently.
+
+### Blog posts (MDX only)
+
+- One MDX file per post: `src/content/tech/<slug>.mdx` and `src/content/travel/<slug>.mdx`. The filename is the slug (lowercase kebab-case) and becomes the URL part under `/blogs/tech/` or `/blogs/travel/`.
+- Never put posts in a CMS or another format. Files under `src/content/` are not routes (they have no `page` file).
+- Each post starts with YAML frontmatter:
+
+```mdx
+---
+title: 'Post title'
+date: '2026-01-31'
+summary: 'One sentence for listings and metadata.'
+tags: ['nextjs', 'typescript']
+draft: false
+---
+```
+
+- `title` and `date` are required. Quote the date (`'YYYY-MM-DD'`) so it stays a string. `summary`, `tags` and `draft` are optional.
+- Frontmatter is exported from each file as `frontmatter`, via `remark-frontmatter` and `remark-mdx-frontmatter` configured in `next.config.ts`. Its type is declared in `src/types/mdx.d.ts`; when you add a field, update that type and this list.
+- Posts with `draft: true` must not appear in listings or be statically generated in production.
+- Each blog has its own dynamic route (`app/blogs/tech/[slug]`, `app/blogs/travel/[slug]`) that loads a post with a dynamic import of the `.mdx` file, with `generateStaticParams` and `dynamicParams = false` so unknown slugs 404. Listing pages read the content directory on the server (`fs`) and use each post's frontmatter. Shared loading helpers may live in `lib/` parameterized by blog; keep routes, listing UI and styling separate per blog.
+- Include the `.mdx` extension explicitly in dynamic imports, e.g. ``import(`@portfolio/content/tech/${slug}.mdx`)``.
+
+### MDX components and plugins
+
+- `src/mdx-components.tsx` is required by `@next/mdx` in the App Router. Map MDX elements (headings, links, images, code blocks) to project components there.
+- Style MDX content with CSS Modules and design tokens. Do not copy the inline `style` examples from Next's docs.
+- Remark and rehype plugins are configured in `next.config.ts` under `createMDX`. Turbopack requires plugin names as strings with serializable options (`'remark-gfm'`, `['remark-toc', { heading: 'Contents' }]`), never imported functions.
+- Not decided yet (ask before assuming): where post images are stored, and syntax highlighting.
+
+### Portfolio data
+
+- Projects, experience, skills and socials are typed TypeScript in `src/data/<name>.ts`, exporting typed constants. Shared types go in `src/types/`.
+- Components never contain this content; pages read it from `data/` and pass it down as props.
+- Each dataset has a data integrity test (see Testing).
+
 ## TODO: Remaining CLAUDE.md sections
 
 Delete from here once added
 
 - [ ] Tech stack and versions
-- [ ] Content and data (`data/` typing and ownership)
 - [ ] Routing and SEO (routes, metadata, sitemap, Open Graph)
 - [ ] Accessibility
 - [ ] Deployment and environment variables
