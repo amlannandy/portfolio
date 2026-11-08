@@ -12,7 +12,7 @@ The two blogs are separate sections, each with its own listing and post pages. T
 
 Blog posts are written in **MDX only**, stored in the repo. Don't introduce a CMS or other content formats.
 
-Not decided yet (ask before assuming): the visual design (settled later; see Styling & Theming) and the exact post URL format under each blog (for example `/blogs/tech/<slug>`). Where MDX files live and how they are loaded is in the Content and data section; the routes and SEO will be written up in Routing and SEO.
+Not decided yet (ask before assuming): the visual design (settled later; see Styling & Theming) and the exact post URL format under each blog (for example `/blogs/tech/<slug>`). Where MDX files live and how they are loaded, plus the SEO rules, are in the Content and data section.
 
 ## NOTE: This is NOT the Next.js you know
 
@@ -274,3 +274,18 @@ draft: false
 - Projects, experience, skills and socials are typed TypeScript in `src/data/<name>.ts`, exporting typed constants. Shared types go in `src/types/`.
 - Components never contain this content; pages read it from `data/` and pass it down as props.
 - Each dataset has a data integrity test (see Testing).
+
+### Metadata and SEO
+
+- Site-wide values (`SITE_NAME`, `SITE_DESCRIPTION`, `SITE_URL`) live in `src/lib/site.ts`. The root layout sets `metadataBase` and a title template (`%s | Amlan Nandy`) from them, so pages export only their own `title` and `description`.
+- Every page sets its own `title` and `description`. Post pages derive them from the frontmatter (`title`, `summary`) with `generateMetadata`.
+- Use relative paths for canonical and Open Graph URLs; `metadataBase` makes them absolute. Build absolute URLs (sitemap, feeds) from `SITE_URL`, never a hardcoded domain.
+- When added, `app/sitemap.ts` lists all routes and every non-draft post, and `app/robots.ts` points to it.
+
+## Deployment and environment variables
+
+- **Host:** Vercel (Hobby plan, personal non-commercial use). Production deploys come from `main` on GitHub; there is no separate staging branch.
+- **Domain:** `amlannandy.in`, registered at GoDaddy. DNS records at GoDaddy point to Vercel (apex `A` record and a `www` `CNAME`). Don't change them without checking Vercel's Domains settings.
+- **Environment variables:** `NEXT_PUBLIC_SITE_URL` is the site's origin (no trailing slash). It is required and has no fallback in code: `src/lib/site.ts` throws if it is missing. Locally it lives in `.env.local` (`http://localhost:3000`); in production it is set to `https://amlannandy.in` in Vercel's project settings. `.env.example` lists every variable the app reads; update it when you add one. Always import `SITE_URL`; never hardcode the domain.
+- Never commit secrets. `.env*` files are gitignored; set real values in Vercel's project settings. Variables prefixed `NEXT_PUBLIC_` are exposed to the browser.
+- `npm run build` must pass locally before a push, since a failed build blocks the deploy.
