@@ -41,6 +41,13 @@ Husky runs `.husky/pre-commit` on every `git commit`:
 
 If the hook fails, fix the reported problem and commit again. Do not use `--no-verify` to get past it unless the user explicitly says to.
 
+## Git Workflow
+
+- Work directly on `main`: commit on `main` and push to `origin main`. Don't create feature branches or open pull requests.
+- Only commit or push when the user asks.
+- Write commit messages as a short imperative summary line, then a body for anything non-obvious.
+- The pre-commit hook must pass (see above); never bypass it with `--no-verify` unless the user explicitly says to.
+
 ## Folder Structure
 
 `src/app/` is for routing only. Shared code lives in top-level folders under `src/`.
