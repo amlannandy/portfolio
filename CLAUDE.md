@@ -1,5 +1,11 @@
 This is a portfolio web app built on top of Next.js.
 
+## NOTE: This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
 ## About
 
 This is the personal website of a software engineer. It presents who they are, what they have built, and what they write about. The site has three areas:
@@ -13,12 +19,6 @@ The two blogs are separate sections, each with its own listing and post pages. T
 Every page must work on both mobile and desktop. Responsive layout is a requirement, not a polish step; see Breakpoints and responsive rules.
 
 Blog posts are written in **MDX only**, stored in the repo. Don't introduce a CMS or other content formats.
-
-## NOTE: This is NOT the Next.js you know
-
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
-
-This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 ## Commands
 
@@ -47,7 +47,33 @@ Formatting is automated; don't hand-format or argue with the tools. Run `npm run
 - **Import order** (via `@trivago/prettier-plugin-sort-imports`), with a blank line between groups: `react`, `next*`, third-party, `@portfolio/components/*`, `@portfolio/(hooks|lib|data|types|styles)/*`, then relative imports. Specifiers are sorted.
 - **ESLint** (`eslint.config.mjs`): flat config extending Next's `core-web-vitals` and `typescript` presets, then `eslint-config-prettier` last to switch off rules that conflict with Prettier. Don't add formatting rules to ESLint.
 - **Stylelint** (`stylelint.config.mjs`): standard SCSS config plus `recess-order` property ordering. Enforces camelCase class names, no `!important`, no ID selectors, and no hex colors in `*.module.*` files (use `var(--color-*)` tokens). `globals` and `src/styles/` may define raw values. Pinned to v17 because `stylelint-config-standard-scss` doesn't support v18 yet.
-- **TypeScript**: `strict` is on. Avoid `any`; prefer `unknown` and narrow.
+- **TypeScript**: `strict` is on.
+  - Model data with explicit types: an `interface` for object shapes (props, data records), a `type` for unions and aliases. Shared types go in `src/types/`; types used by one module stay in that module.
+  - Prefer precise types over loose ones: literal unions (`'tech' | 'travel'`) over `string`, and `as const` for fixed lists.
+  - Type function parameters and exported return values explicitly. Let TypeScript infer local variables.
+  - Never use `any`. Use `unknown` only at boundaries where the shape isn't known yet (parsed JSON, `catch` errors, third-party input), then narrow it to a real type straight away.
+  - Avoid `as` casts and non-null `!`. Fix the type, or narrow with a check, instead.
+
+### Naming
+
+| What                     | Convention                             | Example                                |
+| ------------------------ | -------------------------------------- | -------------------------------------- |
+| Components, types        | PascalCase                             | `ProjectCard`, `interface Project`     |
+| Variables, functions     | camelCase, functions start with a verb | `formatDate`, `getPosts`               |
+| Booleans                 | `is` / `has` / `should` prefix         | `isOpen`, `hasCover`                   |
+| Event handlers           | `handle*` inside, `on*` for props      | `handleClick`, `onToggle`              |
+| Hooks                    | `use*`, camelCase file                 | `hooks/useTheme.ts`                    |
+| True constants           | UPPER_SNAKE_CASE (module level only)   | `SITE_URL`, `MAX_POSTS`                |
+| Non-component files      | camelCase                              | `lib/posts.ts`, `data/projects.ts`     |
+| Route folders, MDX slugs | kebab-case (they become URLs)          | `app/blogs/tech/`, `my-first-post.mdx` |
+| Sass partials            | `_` prefix, kebab-case                 | `_breakpoints.scss`                    |
+| Tests                    | Same name as the file under test       | `Button.test.tsx`, `home.spec.ts`      |
+
+- Use descriptive names, not abbreviations: `project`, not `p` (`i` is fine in short loops).
+- Arrays and collections are plural: `projects`, `posts`.
+- No `I` prefix on interfaces and no `T` prefix on types.
+- Name things by what they are, not how they look: `ProjectCard`, not `BlueBox`.
+- Component-specific naming (folders, files, `<Name>Props`) is in Component Conventions; CSS class and token naming is in Styling.
 
 ### Pre-commit hook
 
