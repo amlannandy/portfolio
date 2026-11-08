@@ -1,5 +1,17 @@
 This is a portfolio web app built on top of Next.js.
 
+## About
+
+This is the personal website of a software engineer. It presents who they are, what they have built, and what they write about. The site has three areas:
+
+- **Portfolio**: introduction, projects, experience, skills and contact details.
+- **Technical blog**: posts about software engineering.
+- **Travel blog**: posts about travel, kept separate from the technical blog.
+
+The two blogs are separate sections, each with its own listing and post pages. They are not one blog filtered by tag, so don't merge their routes, data or styling by default.
+
+Not decided yet (ask before assuming): how blog posts are authored (for example MDX files in the repo or a CMS), the URL structure for the two blogs, and the visual design. These will be settled in the Content and data, Routing and SEO, and Styling & Theming sections.
+
 ## NOTE: This is NOT the Next.js you know
 
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
