@@ -17,10 +17,13 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 | `npm run lint`      | ESLint (Next core-web-vitals + TypeScript rules)              |
 | `npm run lint:css`  | Stylelint on `src/**/*.{css,scss}`; `lint:css:fix` auto-fixes |
 | `npm run format`    | Prettier, write changes; `format:check` only checks           |
+| `npm run test`      | Vitest in watch mode                                          |
+| `npm run test:run`  | Vitest once (unit and component tests)                        |
+| `npm run test:e2e`  | Playwright end-to-end tests                                   |
 
 - Run `typecheck`, `lint`, `lint:css` and `format:check` before considering work done. The pre-commit hook covers staged files plus `typecheck`, but only fixes and checks what is staged.
 - `typecheck` runs `next typegen` first because helpers like `LayoutProps<"/">` are generated, not checked in. Don't replace it with a bare `tsc`.
-- There is no test script yet.
+- Also run `test:run` before considering work done, and `test:e2e` when routes or user-facing behavior changed. See Testing.
 
 ## Code Style
 
@@ -181,3 +184,48 @@ Supports the system preference plus a manual toggle (light, dark, or system).
 - No `!important`, no styling by ID, no global selectors in component stylesheets.
 - No CSS-in-JS or utility-class frameworks; Sass modules are the only approach.
 - Don't duplicate token values in components; reference the variable.
+
+## Testing
+
+Unit and component tests use **Vitest** and **React Testing Library**. End-to-end tests use **Playwright**. Configuration lives in `vitest.config.mts` and `playwright.config.ts`; the `@portfolio/*` alias works in tests. When changing test setup, follow Next's guides in `node_modules/next/dist/docs/01-app/02-guides/testing/`.
+
+### What goes where
+
+- **Unit and component tests**: `*.test.ts` / `*.test.tsx`, colocated with the code they test (`Button/Button.test.tsx`, `lib/format.test.ts`).
+- **Data integrity tests**: one test file per dataset in `data/` checking required fields, unique ids or slugs, and well-formed URLs, so broken content fails a test instead of the page.
+- **End-to-end tests**: `*.spec.ts` in the root `e2e/` folder. They run against the real app in a desktop and a mobile browser project; use relative URLs (`page.goto("/")`), since `baseURL` is configured.
+- Vitest ignores `e2e/`, and Playwright only looks in `e2e/`. Don't mix the two.
+
+### What to test
+
+- Behavior of interactive components: what the user sees and can do (clicking, typing, keyboard use, open and close states, form validation and submit states).
+- Utilities and logic with real branching, and any bug that has been fixed.
+- Critical user flows end-to-end: pages load without console errors, navigation works, state that should persist survives a reload, and the layout works on mobile.
+- Don't test purely presentational components, CSS, or Next internals. No snapshot tests.
+- `async` Server Components can't be rendered by Vitest. Cover them with end-to-end tests instead.
+
+### Writing tests
+
+- Query by role or label (`getByRole`, `getByLabelText`), then by text. Avoid test IDs and CSS selectors unless there is no accessible alternative.
+- Use `@testing-library/user-event` for interactions, not `fireEvent`.
+- Assert on outcomes the user can observe, not on implementation details like state or class names.
+- Import from `vitest` explicitly (`import { expect, test } from 'vitest'`); globals are off.
+- Tests must be deterministic: no real network or clock. Mock `fetch` and use fake timers.
+- Keep tests independent. Each one sets up its own state and doesn't rely on another test running first.
+
+### Rules
+
+- A new interactive component or utility ships with a test. A bug fix starts with a failing regression test.
+- Don't delete or skip a failing test to get green (`.skip`, `.only`, loosened assertions). Fix the code or the test.
+- Test files are linted, formatted and typechecked like any other code.
+- Tests do **not** run in the pre-commit hook, so run them yourself (see Commands) before considering work done.
+
+## TODO: Remaining CLAUDE.md sections
+
+Delete from here once added
+
+- [ ] Tech stack and versions
+- [ ] Content and data (`data/` typing and ownership)
+- [ ] Routing and SEO (routes, metadata, sitemap, Open Graph)
+- [ ] Accessibility
+- [ ] Deployment and environment variables
