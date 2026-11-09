@@ -14,7 +14,7 @@ This is the personal website of a software engineer. It presents who they are, w
 - **Technical blog**: posts about software engineering, at `/blogs/tech`.
 - **Travel blog**: posts about travel, kept separate from the technical blog, at `/blogs/travel`.
 
-The two blogs are separate sections, each with its own listing and post pages. They are not one blog filtered by tag, so don't merge their routes, data or styling by default.
+The two blogs are separate sections, each with its own listing and post pages. They are not one blog filtered by tag, so don't merge their routes or data by default. Both listings use the shared `PostList` component.
 
 Every page must work on both mobile and desktop. Responsive layout is a requirement, not a polish step; see Breakpoints and responsive rules.
 
@@ -296,13 +296,14 @@ date: '2026-01-31'
 summary: 'One sentence for listings and metadata.'
 tags: ['nextjs', 'typescript']
 draft: false
+cover: '/images/blogs/tech/post-slug/cover.jpg'
 ---
 ```
 
-- `title` and `date` are required. Quote the date (`'YYYY-MM-DD'`) so it stays a string. `summary`, `tags` and `draft` are optional.
-- Frontmatter is exported from each file as `frontmatter`, via `remark-frontmatter` and `remark-mdx-frontmatter` configured in `next.config.ts`. Its type is declared in `src/types/mdx.d.ts`; when you add a field, update that type and this list.
+- `title` and `date` are required. Quote the date (`'YYYY-MM-DD'`) so it stays a string. `summary`, `tags`, `draft` and `cover` are optional.
+- Frontmatter is exported from each file as `frontmatter`, via `remark-frontmatter` and `remark-mdx-frontmatter` configured in `next.config.ts`. Its type is `PostFrontmatter` in `src/types/post.ts` (used by `src/types/mdx.d.ts`); when you add a field, update that type, the validation in `parseFrontmatter` (`src/lib/posts.ts`) and this list.
 - Posts with `draft: true` must not appear in listings or be statically generated in production.
-- Each blog has its own dynamic route (`app/blogs/tech/[slug]`, `app/blogs/travel/[slug]`) that loads a post with a dynamic import of the `.mdx` file, with `generateStaticParams` and `dynamicParams = false` so unknown slugs 404. Listing pages read the content directory on the server (`fs`) and use each post's frontmatter. Shared loading helpers may live in `lib/` parameterized by blog; keep routes, listing UI and styling separate per blog.
+- Each blog has its own dynamic route (`app/blogs/tech/[slug]`, `app/blogs/travel/[slug]`) that loads a post with a dynamic import of the `.mdx` file, with `generateStaticParams` and `dynamicParams = false` so unknown slugs 404. Listing pages get their posts from `getPosts(blog)` in `src/lib/posts.ts`, which reads the content folder with `fs`, validates the frontmatter (bad content fails the build), works out reading time and makes the cover's blur placeholder. Call it at module scope in the page, not inside the component, so the route stays fully static with no revalidation. Keep each blog's routes separate.
 - Include the `.mdx` extension explicitly in dynamic imports, e.g. ``import(`@portfolio/content/tech/${slug}.mdx`)``.
 
 ### MDX components and plugins
@@ -310,7 +311,8 @@ draft: false
 - `src/mdx-components.tsx` is required by `@next/mdx` in the App Router. Map MDX elements (headings, links, images, code blocks) to project components there.
 - Style MDX content with CSS Modules and design tokens. Do not copy the inline `style` examples from Next's docs.
 - Remark and rehype plugins are configured in `next.config.ts` under `createMDX`. Turbopack requires plugin names as strings with serializable options (`'remark-gfm'`, `['remark-toc', { heading: 'Contents' }]`), never imported functions.
-- Not decided yet (ask before assuming): where post images are stored, and syntax highlighting.
+- Post images live in `public/images/blogs/<tech|travel>/<slug>/`, referenced from frontmatter by their public path (`cover: '/images/blogs/tech/my-post/cover.jpg'`). Blur placeholders are generated at build time with `sharp` (`src/lib/blurDataUrl.ts`); a missing image fails the build.
+- Not decided yet (ask before assuming): syntax highlighting.
 
 ### Portfolio data
 
