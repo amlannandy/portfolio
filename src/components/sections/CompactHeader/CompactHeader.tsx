@@ -36,8 +36,12 @@ const CompactHeader = ({ name, resumeUrl, socials, watchId }: CompactHeaderProps
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        // Show only once the target has passed above the bar, not while it is below the fold.
-        setIsVisible(!entry.isIntersecting && entry.boundingClientRect.top < 0);
+        // The observed area starts just below where the bar sits. Show the bar once the target has
+        // left that area through its top edge (scrolled up under the bar), not while it is still
+        // below the fold. Compare against the area's top, not the viewport's: the observer only
+        // fires as the target crosses that edge, when it is still on screen.
+        const areaTop = entry.rootBounds?.top ?? 0;
+        setIsVisible(!entry.isIntersecting && entry.boundingClientRect.top < areaTop);
       },
       { rootMargin: `-${barHeight * rootFontSize}px 0px 0px 0px` }
     );

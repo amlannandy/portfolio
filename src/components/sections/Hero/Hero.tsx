@@ -20,10 +20,11 @@ const Hero = ({ profile, socials, endMarkerId }: HeroProps) => (
       className={styles.avatar}
       name={profile.name}
       initials={profile.initials}
+      src={profile.avatarUrl}
+      shouldPreload
       sizes="(min-width: 768px) 14rem, 8rem"
     />
     <div className={styles.intro}>
-      <p className={styles.role}>{profile.role}</p>
       <h1 className={styles.name} id="hero-name">
         {profile.name}
       </h1>
@@ -31,7 +32,7 @@ const Hero = ({ profile, socials, endMarkerId }: HeroProps) => (
       <div className={styles.actions}>
         <ButtonLink className={styles.resume} href={profile.resumeUrl} download>
           <Icon name="download" size={18} />
-          Download résumé
+          View resume
         </ButtonLink>
         <ButtonLink className={styles.email} variant="ghost" href={`mailto:${profile.email}`}>
           {profile.email}

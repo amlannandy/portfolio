@@ -78,6 +78,32 @@ test('on phones, a compact header appears once the hero scrolls away', async ({
   await expect(quickLinks.getByRole('link', { name: 'Download résumé' })).toBeVisible();
 });
 
+test('on phones, the compact header follows a gradual scroll down and back up', async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(!isMobile, 'The compact header is phone-only.');
+  // The tech blog is long enough to scroll the hero away with real content.
+  await page.goto(BLOGS.tech.path);
+  const quickLinks = page.getByRole('navigation', { name: 'Quick links' });
+  const sections = page.getByRole('navigation', { name: 'Sections' });
+  const scrollBy = async (distance: number) => {
+    for (let moved = 0; moved < Math.abs(distance); moved += 30) {
+      await page.mouse.wheel(0, Math.sign(distance) * 30);
+      await page.waitForTimeout(50);
+    }
+  };
+
+  // Small steps, so the hero's links pass under the bar gradually rather than in one jump.
+  await scrollBy(900);
+  const tabsTop = await sections.evaluate((element) => element.getBoundingClientRect().top);
+  expect(tabsTop).toBeGreaterThan(0);
+  await expect(quickLinks).toBeVisible();
+
+  await scrollBy(-900);
+  await expect(quickLinks).toBeHidden();
+});
+
 test('the tech blog lists its posts, newest first', async ({ page }) => {
   await page.goto(BLOGS.tech.path);
   const posts = page.getByRole('main').getByRole('listitem');
