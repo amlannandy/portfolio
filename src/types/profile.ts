@@ -8,9 +8,10 @@ export interface SocialLink {
 
 export interface Profile {
   name: string;
-  /** Shown in the avatar until a photo is added. */
+  /** Shown in the avatar when there is no photo. */
   initials: string;
-  role: string;
+  /** Square photo under `public/`, e.g. `/images/profile/portrait.webp`. */
+  avatarUrl?: string;
   bio: string;
   email: string;
   resumeUrl: string;
