@@ -1,0 +1,56 @@
+@use '../../../styles/mixins';
+
+.buttonLink {
+  position: relative;
+  display: inline-flex;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: center;
+  min-height: var(--tap-size);
+  padding: var(--space-3) var(--space-5);
+  overflow: hidden;
+  font-size: var(--text-md);
+  border-radius: var(--radius-pill);
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.primary {
+  font-weight: 600;
+  color: var(--color-on-accent);
+  background: var(--color-accent);
+  box-shadow: var(--shadow-accent-inset);
+
+  @include mixins.hover {
+    background: var(--color-accent-hover);
+  }
+
+  // A light sweep across the button on hover.
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    &::after {
+      position: absolute;
+      inset: 0 auto 0 -60%;
+      width: 40%;
+      content: '';
+      background: linear-gradient(100deg, transparent, rgb(255 255 255 / 45%), transparent);
+      transform: skewX(-20deg);
+      transition: left 0.5s ease;
+    }
+
+    &:hover::after {
+      left: 120%;
+    }
+  }
+}
+
+.ghost {
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+
+  @include mixins.hover {
+    color: var(--color-text);
+    border-color: var(--color-text-muted);
+  }
+}

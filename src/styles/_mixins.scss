@@ -1,0 +1,44 @@
+@use 'breakpoints' as bp;
+
+// Centered content column capped at the container width, with responsive side gutters.
+@mixin container {
+  width: 100%;
+  max-width: var(--container-max);
+  padding-inline: var(--gutter);
+  margin-inline: auto;
+
+  @include bp.up(md) {
+    padding-inline: var(--gutter-wide);
+  }
+}
+
+// Hover styles are enhancements only, for devices that can actually hover.
+@mixin hover {
+  @media (hover: hover) {
+    &:hover {
+      @content;
+    }
+  }
+}
+
+// Round, bordered 44px tap target holding a single icon.
+@mixin icon-circle {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: var(--tap-size);
+  height: var(--tap-size);
+  color: var(--color-text-secondary);
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease;
+
+  @include hover {
+    color: var(--color-text);
+    border-color: var(--color-text-muted);
+  }
+}

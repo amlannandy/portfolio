@@ -1,0 +1,107 @@
+@use '../../../styles/breakpoints' as bp;
+@use '../../../styles/mixins';
+
+.hero {
+  @include mixins.container;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  align-items: center;
+  padding-block: var(--space-5) var(--space-4);
+  text-align: center;
+
+  @include bp.up(md) {
+    flex-direction: row;
+    gap: var(--space-7);
+    padding-block: var(--space-8);
+    text-align: left;
+  }
+}
+
+.avatar {
+  width: 8rem;
+
+  @include bp.up(md) {
+    width: 14rem;
+  }
+}
+
+.intro {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--space-4);
+  align-items: center;
+  min-width: 0;
+
+  @include bp.up(md) {
+    gap: var(--space-5);
+    align-items: flex-start;
+  }
+}
+
+.role {
+  margin-top: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+
+  @include bp.up(md) {
+    margin-top: 0;
+    font-size: var(--text-sm);
+  }
+}
+
+.name {
+  font-size: var(--text-display);
+  font-weight: 700;
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-display);
+}
+
+.bio {
+  max-width: 38rem;
+  font-size: var(--text-md);
+  color: var(--color-text-secondary);
+
+  @include bp.up(md) {
+    font-size: var(--text-lg);
+  }
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  width: 100%;
+  margin-top: var(--space-2);
+
+  @include bp.up(md) {
+    width: auto;
+  }
+}
+
+.resume {
+  flex: 1 1 100%;
+
+  @include bp.up(md) {
+    flex: 0 0 auto;
+  }
+}
+
+// Phones reach email through the social links instead.
+.email {
+  display: none;
+
+  @include bp.up(md) {
+    display: inline-flex;
+  }
+}
+
+.socials {
+  @include bp.up(md) {
+    display: none;
+  }
+}
