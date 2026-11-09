@@ -12,10 +12,15 @@ export interface PostFrontmatter {
   cover?: string;
 }
 
-export interface PostCover {
+export interface ImageInfo {
+  /** Public path, e.g. `/images/blogs/tech/my-post/cover.jpg`. */
   src: string;
-  /** Tiny base64 image shown blurred while the cover loads. */
+  width: number;
+  height: number;
+  /** Tiny base64 image shown blurred while the image loads. */
   blurDataUrl: string;
+  /** Animated GIFs and WebPs can't be resized by `next/image`, so they're served as they are. */
+  isAnimated: boolean;
 }
 
 /** What a blog's listing needs to show one post. */
@@ -25,10 +30,12 @@ export interface PostSummary {
   date: string;
   summary?: string;
   readingMinutes: number;
-  cover?: PostCover;
+  cover?: ImageInfo;
 }
 
 export interface BlogConfig {
+  /** Name used for its tab and back links. */
+  label: string;
   /** Listing route; posts live at `<path>/<slug>`. */
   path: string;
   emptyMessage: string;

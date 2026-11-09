@@ -1,0 +1,9 @@
+// Natural size up to the column width, so small images like logos aren't stretched.
+.image {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  margin-inline: auto;
+  border-radius: var(--radius-sm);
+}

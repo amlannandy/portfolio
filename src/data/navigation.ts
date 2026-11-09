@@ -5,6 +5,6 @@ import { BLOGS } from './blogs';
 export const NAV_ITEMS: NavItem[] = [
   { label: 'Work Experience', href: '/' },
   { label: 'Pet Projects', href: '/projects' },
-  { label: 'Tech Writeups', href: BLOGS.tech.path },
-  { label: 'Travel Stories', href: BLOGS.travel.path },
+  { label: BLOGS.tech.label, href: BLOGS.tech.path },
+  { label: BLOGS.travel.label, href: BLOGS.travel.path },
 ];

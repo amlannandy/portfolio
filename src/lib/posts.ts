@@ -2,10 +2,8 @@ import { readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { parse as parseYaml } from 'yaml';
 
-import { getBlurDataUrl } from '@portfolio/lib/blurDataUrl';
+import { BLOG_IMAGES_PATH, getImageInfo } from '@portfolio/lib/images';
 import type { Blog, PostFrontmatter, PostSummary } from '@portfolio/types/post';
-
-const CONTENT_DIR = path.join(process.cwd(), 'src', 'content');
 
 const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
@@ -24,8 +22,6 @@ interface LoadPostsOptions {
   directory: string;
   /** Drafts are listed in development only. */
   shouldIncludeDrafts: boolean;
-  /** Where cover image paths resolve; defaults to the project's `public/`. */
-  publicDir?: string;
 }
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
@@ -68,8 +64,8 @@ export const parseFrontmatter = (data: unknown, file: string): PostFrontmatter =
   if (draft !== undefined && typeof draft !== 'boolean') {
     throw invalidPost(file, '`draft` must be true or false.');
   }
-  if (cover !== undefined && (typeof cover !== 'string' || !cover.startsWith('/'))) {
-    throw invalidPost(file, '`cover` must be a path under public/, starting with `/`.');
+  if (cover !== undefined && (typeof cover !== 'string' || !cover.startsWith(BLOG_IMAGES_PATH))) {
+    throw invalidPost(file, `\`cover\` must be a path under public${BLOG_IMAGES_PATH}.`);
   }
 
   return {
@@ -104,7 +100,8 @@ export const selectListedPosts = (
 const readPostFiles = async (directory: string): Promise<string[]> => {
   try {
     const files = await readdir(directory);
-    return files.filter((file) => file.endsWith('.mdx'));
+    // Files starting with an underscore, like `_template.mdx`, aren't posts.
+    return files.filter((file) => file.endsWith('.mdx') && !file.startsWith('_'));
   } catch (error: unknown) {
     // A blog with no posts yet has no folder (git doesn't keep empty ones).
     if (isRecord(error) && error.code === 'ENOENT') return [];
@@ -131,7 +128,6 @@ const parsePostFile = async (directory: string, file: string): Promise<ParsedPos
 export const loadPosts = async ({
   directory,
   shouldIncludeDrafts,
-  publicDir,
 }: LoadPostsOptions): Promise<PostSummary[]> => {
   const files = await readPostFiles(directory);
   const posts = await Promise.all(files.map((file) => parsePostFile(directory, file)));
@@ -144,20 +140,18 @@ export const loadPosts = async ({
         date: frontmatter.date,
         ...(frontmatter.summary && { summary: frontmatter.summary }),
         readingMinutes,
-        ...(frontmatter.cover && {
-          cover: {
-            src: frontmatter.cover,
-            blurDataUrl: await getBlurDataUrl(frontmatter.cover, publicDir),
-          },
-        }),
+        ...(frontmatter.cover && { cover: await getImageInfo(frontmatter.cover) }),
       })
     )
   );
 };
 
-/** A blog's listed posts. Call it at module scope so the files are read once, at build time. */
+/**
+ * A blog's listed posts. Call it at module scope so the files are read once, at build time; the
+ * routes then stay fully static.
+ */
 export const getPosts = async (blog: Blog): Promise<PostSummary[]> =>
   loadPosts({
-    directory: path.join(CONTENT_DIR, blog),
+    directory: path.join(process.cwd(), 'src', 'content', blog),
     shouldIncludeDrafts: process.env.NODE_ENV !== 'production',
   });

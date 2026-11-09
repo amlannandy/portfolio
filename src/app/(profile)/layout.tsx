@@ -1,4 +1,5 @@
 import CompactHeader from '@portfolio/components/sections/CompactHeader';
+import Header from '@portfolio/components/sections/Header';
 import Hero from '@portfolio/components/sections/Hero';
 import TabNav from '@portfolio/components/sections/TabNav';
 
@@ -13,6 +14,7 @@ const HERO_END_ID = 'hero-end';
 export default function ProfileLayout({ children }: LayoutProps<'/'>) {
   return (
     <>
+      <Header socials={SOCIAL_LINKS} />
       <CompactHeader
         name={PROFILE.name}
         resumeUrl={PROFILE.resumeUrl}
