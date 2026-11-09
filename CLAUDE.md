@@ -86,8 +86,12 @@ If the hook fails, fix the reported problem and commit again. Do not use `--no-v
 
 ## Git Workflow
 
-- Work directly on `main`: commit on `main` and push to `origin main`. Don't create feature branches or open pull requests.
-- Only commit or push when the user asks.
+- Never commit directly on `main`. Start each piece of work on a new branch cut from an up-to-date `main`:
+  - `feat/<feature-name>` for new features (e.g. `feat/theme-toggle`)
+  - `fix/<bug-name>` for bug fixes (e.g. `fix/mobile-nav-overflow`)
+- Branch names after the prefix are lowercase kebab-case and describe the change, not the ticket or date.
+- Commit on the branch and push it with `git push -u origin <branch>`. Merge into `main` through a pull request; `main` only changes by merging.
+- Only commit, push or open a pull request when the user asks.
 - Write commit messages as a short imperative summary line, then a body for anything non-obvious.
 - The pre-commit hook must pass (see above); never bypass it with `--no-verify` unless the user explicitly says to.
 
