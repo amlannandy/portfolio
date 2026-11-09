@@ -1,4 +1,4 @@
-import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import sharp from 'sharp';
@@ -156,5 +156,34 @@ describe('loadPosts', () => {
     await expect(loadPosts({ directory, shouldIncludeDrafts: false, publicDir })).rejects.toThrow(
       /missing\.jpg/
     );
+  });
+});
+
+// Checks the posts committed to the repo, so broken content fails the tests, not just the build.
+describe.each(['tech', 'travel'] as const)('committed %s posts', (blog) => {
+  const directory = path.join(process.cwd(), 'src', 'content', blog);
+
+  test('load, with valid frontmatter and cover images', async () => {
+    await expect(loadPosts({ directory, shouldIncludeDrafts: true })).resolves.toBeDefined();
+  });
+
+  test('link only to posts and images that exist', async () => {
+    const files = await readdir(directory).catch(() => []);
+    const slugs = new Set(files.map((file) => file.replace(/\.mdx$/, '')));
+
+    for (const file of files) {
+      const source = await readFile(path.join(directory, file), 'utf8');
+      for (const [, slug] of source.matchAll(
+        new RegExp(`\\]\\(/blogs/${blog}/([a-z0-9-]+)\\)`, 'g')
+      )) {
+        expect(slugs, `${file} links to a missing post "${slug}"`).toContain(slug);
+      }
+      for (const [, src] of source.matchAll(/!\[[^\]]*\]\((\/[^)\s]+)\)/g)) {
+        await expect(
+          readFile(path.join(process.cwd(), 'public', src)),
+          `${file}: ${src}`
+        ).resolves.toBeDefined();
+      }
+    }
   });
 });

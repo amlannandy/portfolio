@@ -1,0 +1,55 @@
+---
+title: 'My GSoC ’21 Journey: Week 4'
+date: '2021-07-03'
+summary: "Last week, I worked on improving the project's collaborative experience by implementing a team system This week, I’m refining the same even further by implementing a chat system."
+tags: ['gsoc', 'gsoc2021', 'open-source', 'python', 'flutter']
+cover: '/images/blogs/tech/my-gsoc-21-journey-week-4/cover.jpg'
+---
+
+Last week, I worked on improving the project's collaborative experience by implementing a team system This week, I’m refining the same even further by implementing a chat system.
+
+> If you’re new to my blogs, do check out the previous ones for better understanding of what I’m trying to do.
+>
+> [Introductory Blog](/blogs/tech/my-gsoc-21-journey-getting-started)
+>
+> [Week 1: Migrating to Flutter 2.0 and implementing backend service selection](/blogs/tech/my-gsoc-21-journey-week-1)
+>
+> [Week 2: Implementing project activity tracking](/blogs/tech/my-gsoc-21-journey-week-2)
+>
+> [Week 3: Improving Team Management](/blogs/tech/my-gsoc-21-journey-week-3)
+
+One of the main goals for LabelLab this summer was to improve the experience for users who are collaborating with others on a machine learning project. Building upon the team system implemented last week, the objective now was to implement a team-wise chatroom system where members can discuss the project and communicate regarding assigned tasks, the progress of the project, etc.
+
+## Starting with the Backend
+
+Implementing chat functionality means you have to create a live feed of messages for the user so that they receive messages from other users as soon as they are sent. That was not achievable with an HTTP API call, so I turned towards WebSockets.
+
+WebSocket is a bi-directional communication protocol to enable an interactive communication session between the server and the client. With this, you can send messages to a server and receive event-driven responses without having to poll the server for a reply, making it a perfect choice for this use case.
+
+In Flask, such a feature can be easily implemented using the [Flask-SocketIO](https://flask-socketio.readthedocs.io/en/latest/) package.
+
+The backend implementation consisted of basically 2 sections:
+
+1. Creating an API route to fetch all previous messages of a team
+2. A WebSocket event onto which the client can communicate. Here, we have a **_send_message_** event onto which the client can connect when sending a message. That message is saved to the database and then the server sends back a **_receive_message_** event to notify the client (i.e mobile application).
+
+## Mobile Implementation
+
+On the client side, we can use the dart package [socket_io_client](https://pub.dev/packages/socket_io_client) to communicate with the web socket. After fetching all previous messages through the API route, the user can send messages by triggering the **_send_message_** event, passing the inputted message as data.
+
+Also, the client would be listening on for the **_receive_message_** event on the WebSocket server, so that if any other user sends a message and triggers this event, it can instantly capture that and show it to the current user.
+
+<figure>
+
+![](/images/blogs/tech/my-gsoc-21-journey-week-4/figure-01.gif)
+
+<figcaption>The Chat System in action!</figcaption>
+</figure>
+
+## Signing off
+
+With the completion of the chat system this week, most of the development work on the Flask API and Flutter Mobile Application is done! You can find the PR for it below:
+
+[#610 — Implemented Team-wise Chat System](https://github.com/scorelab/LabelLab/pull/610)
+
+Next, I’ll be moving on to writing unit tests and documentation for the mobile application. Hope to see you back on my blog for that! Till then, stay safe, and may the source be with you! :)

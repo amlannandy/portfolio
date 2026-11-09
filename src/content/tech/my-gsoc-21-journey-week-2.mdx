@@ -1,0 +1,99 @@
+---
+title: 'My GSoC’21 Journey: Week 2'
+date: '2021-06-20'
+summary: 'Week 2 of the GSoC ‘21 coding period has begun!'
+tags: ['gsoc', 'gsoc2021', 'python', 'flutter', 'app-development']
+cover: '/images/blogs/tech/my-gsoc-21-journey-week-2/cover.jpg'
+---
+
+> If you haven’t already done so, do check out my [introductary](/blogs/tech/my-gsoc-21-journey-getting-started) and [week 1](/blogs/tech/my-gsoc-21-journey-week-1) blogs first to get a better understanding of the project!
+
+Week 2 of the GSoC ‘21 coding period has begun! After having started on a lighter note last week, working on basic stuff, I’m getting deep into the project now and trying to implement some very exciting features!
+
+<figure>
+
+![“We need to go deeper” meme from Inception](/images/blogs/tech/my-gsoc-21-journey-week-2/figure-01.jpg)
+
+</figure>
+
+If you didn’t already know, the project that I’m working on is called LabelLab. It is an image labeling tool for ML researchers. Basically, the user can create a project where they can add images and label them with custom-made labels. One can also create models and train them and also run classifications. More users can also be added to a project as collaborators and assigned specific roles such as labeling, models, etc.
+
+Putting it in a simple way, an insane amount of stuff is going on in every project! And that can become very difficult to track as time goes on. So, one of the biggest features that I’m implementing this summer is a Project Activity Tracking System, which will let you view logs on everything happening inside a project, like when a new member is added, a model is created, etc.
+
+The implementation includes work on both the Flask API as well as the Flutter Mobile Application.
+
+## Starting with the Backend
+
+While implementing something like this may sound daunting at first, it was actually very easy to implement with the help of decorators in Python!
+
+Decorators are neat utility functions that allow you to add some functionality to an existing piece of code, basically acting as middleware. I created a Logs decorator which handled all the business logic for this feature. When it is added on an API route, it would record a log in the database whenever the particular route was called.
+
+1. The decorator would check the URL of the route that was called and on basis of that, would design the Log that would be stored.
+
+> For example, let’s consider this route
+>
+> **_PUT /api/v1/label/label_info/\<project_id\>/\<label_id\>_**
+>
+> This route is used to update a label belonging to a particular project.
+
+Here, we can design the Log object to be something like this
+
+- **message** — Label with id \<label_id\> has been updated
+- **user_id** — Id of the user who made the request, which can be extracted from the auth token that is sent with every request
+- **category** — labels, since we’re interacting with a label
+- **entity_type** — label, since the entity we’re interacting with here is a label
+- **entity_id** — id of the entity in question, in this case, the id of the label
+
+The _category_ field opens up the scope for filtering and lets us view category-specific logs.
+
+**_e.g. View only activity related to labels in a project_**
+
+The _entity_type_ and _entity_id_ fields allow us to associate logs with a particular entity (image, label, model, etc) and view all the changes that have been done specifically on them.
+
+**_e.g. View all the changes that have been done on a particular image - cropping, labeling, etc._**
+
+Also, the decorator is configured to run after the completion of the route function. This way, we can save logs only for the successful API calls and ignore the unsuccessful ones!
+
+If you’re curious to know in-depth about how this was implemented, I’d suggest you check out my project proposal [here](https://drive.google.com/file/d/1lqfnTeeKTtqyiyQGvweSLRJVAJymrmrA/view?usp=sharing)!
+
+## Getting to the Mobile Application
+
+The first thing I did in the app was to modify the existing Project Details Screen to accommodate the new changes. Now, it also shows the recent activity in the project. From there, one can also navigate to the Project Activity Screen to view ALL the activity that has taken place in the project!
+
+<figure>
+
+![Two app screenshots: a project page with a Recent Activity list, and the full Project Activity screen with colour-coded entries](/images/blogs/tech/my-gsoc-21-journey-week-2/figure-02.png)
+
+</figure>
+
+The next step was to implement filtering functionality in these logs. One can now view all the activity logs related to a particular category, or even to a particular member. (Have to keep track of who’s working and who’s not xD)
+
+<figure>
+
+![](/images/blogs/tech/my-gsoc-21-journey-week-2/figure-03.png)
+
+<figcaption>Let’s see how much work John Doe has done!</figcaption>
+</figure>
+
+You can also go to a particular entity, such as a label, image, or model, and also view all the activity logs solely related to them, to keep a track of all changes performed on it!
+
+<figure>
+
+![](/images/blogs/tech/my-gsoc-21-journey-week-2/figure-04.png)
+
+<figcaption>Viewing all changes done on a particular model</figcaption>
+</figure>
+
+You can view a small demo fully demonstrating the feature [here](https://drive.google.com/file/d/1ttgpKrsm7bM3EIm40VveUUB8EAEP5yJt/view?usp=sharing)!
+
+Honestly speaking, I found the mobile implementation a bit tougher compared to the backend. Here I had to tinker a lot with some of the existing code, so I had to take extra care with understanding it and making sure I was not breaking any existing functionality!
+
+## Signing Off
+
+That’s it from me for this week. You can check out the code implementation for all the work done in the PRs provided below:
+
+[#604 - \[Backend\] Implemented Project Activity Tracking System](https://github.com/scorelab/LabelLab/pull/604)
+
+[#606 - \[Mobile\] Implemented Project Activity Tracking System](https://github.com/scorelab/LabelLab/pull/606)
+
+You can also check out my [GitHub](https://github.com/amlannandy) profile if you want to see some more interesting projects of mine! Hope you give next week’s blog a read too, until then, may the source be with you! :)

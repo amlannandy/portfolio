@@ -1,0 +1,140 @@
+---
+title: 'Working with Error Boundaries in React'
+date: '2021-10-27'
+summary: 'Encountering errors is pretty common while developing any application.'
+tags: ['javascript', 'react', 'front-end-development', 'reactjs', 'web']
+cover: '/images/blogs/tech/working-with-error-boundaries-in-react/cover.jpg'
+---
+
+Encountering errors is pretty common while developing any application. And as a developer, your job is to ensure none of those go into production. But that’s not always possible. No matter how many hours you put into debugging and testing, errors are bound to occur. So the best you can do is ensure that when an error does occur, the user experience is affected minimally.
+
+While working on the `Trell Shop` website during my internship, I got the opportunity to explore various ways one could implement error handling within the application. While `try-catch` can be used to handle errors in `imperative` code, React components are `declarative` in nature. And before React 16, there were no proper ways to handle errors gracefully inside them.
+
+`Error Boundaries` were introduced in React 16, which let you catch errors inside a React component and all its children during rendering, and handle them properly through lifecycle methods, like displaying a fallback UI, logging the error, etc.
+
+## How to use them?
+
+A class component can be made an error boundary if it implements either or both of these methods.
+
+[`getDerivedStateFromError()`](https://reactjs.org/docs/react-component.html#static-getderivedstatefromerror) : A static lifecycle method that can be used to update the state in the Error Boundary, so that in the next render cycle, the error is acknowledged and the fallback UI is displayed instead.
+
+`componentDidCatch()` : Used to view and log information about the error.
+
+<figure>
+
+![](/images/blogs/tech/working-with-error-boundaries-in-react/figure-01.png)
+
+<figcaption>Basic Implementation of an Error Boundary</figcaption>
+</figure>
+
+To use the error boundary on a component, simply wrap that component with it, and voila! Any error that occurs in it or in its children will be handled.
+
+<figure>
+
+![](/images/blogs/tech/working-with-error-boundaries-in-react/figure-02.png)
+
+<figcaption>Using the Error Boundary with a component</figcaption>
+</figure>
+
+**Limitations of Error Boundaries -**
+
+- It can only be implemented in class components.
+- It can’t catch errors in asynchronous code and event handlers.
+- It can catch errors in the children of the error boundary, but not in the error boundary itself.
+
+## Where to use them?
+
+There can be multiple ways to use these error boundaries in an application. A few common ones are -
+
+1. **Global Error Boundaries**
+
+One way of handling unwanted errors is by simply wrapping the root component of your application with an error boundary. _Anything_ goes wrong _anywhere_ in your application, it is handled by the error boundary, and the fallback UI is displayed instead.
+
+<figure>
+
+![](/images/blogs/tech/working-with-error-boundaries-in-react/figure-03.png)
+
+<figcaption>Global Error Boundary which can cover the whole application</figcaption>
+</figure>
+
+**2. Page-level Error Boundaries**
+
+Sometimes, having a single error boundary globally might not be very useful. With such an approach, there’s no proper way of knowing where the error originated from. You might want to display a different fallback UI depending on which page the error occurred in.
+
+In such cases, you can create separate error boundaries for each page with the necessary customizations.
+
+<figure>
+
+![](/images/blogs/tech/working-with-error-boundaries-in-react/figure-04.png)
+
+<figcaption>Error Boundary that can be applied on a specific page (Post Details Screen, in this case) with a more accurate error message</figcaption>
+</figure>
+
+**3. Component-level Error Boundaries**
+
+There might be some components in a page that are individually running a process/fetching data and thus, are prone to errors. You don’t want the entire page to go down just because of a small component. Instead, you can set up a separate boundary for it so that it doesn’t affect the page/parent component.
+
+If the data they are dealing with is not that significant, you can altogether hide that component if an error occurs to maintain a clean UI.
+
+<figure>
+
+![](/images/blogs/tech/working-with-error-boundaries-in-react/figure-05.jpg)
+
+<figcaption>Here, we have a page with 3 components, each having its own error boundary</figcaption>
+</figure>
+
+<figure>
+
+![](/images/blogs/tech/working-with-error-boundaries-in-react/figure-06.jpg)
+
+<figcaption>Here, Component B encounters an error. Instead of hiding the UI of the whole page, we are only showing the fallback UI for the component where the error occurred</figcaption>
+</figure>
+
+<figure>
+
+![](/images/blogs/tech/working-with-error-boundaries-in-react/figure-07.jpg)
+
+<figcaption>Now there’s an error with Component A. So, we’re just hiding that component only so that the rest of the page can still function as usual</figcaption>
+</figure>
+
+## Which of these 3 works the best?
+
+Ideally, you want your application to have error boundaries of ALL 3 types mentioned above, to ensure decent coverage of error handling while providing a good user experience.
+
+You want to have page and component-specific boundaries for areas that are error-prone or contain crucial data, and at the same time also set up global boundaries to make sure no error, how small it may be, goes unhandled and potentially ruins the user experience.
+
+The best way of showcasing it would be through the `Trell Shop` website itself.
+
+<figure>
+
+![](/images/blogs/tech/working-with-error-boundaries-in-react/figure-08.png)
+
+<figcaption>We have a Global Error Boundary to handle errors anywhere in the application</figcaption>
+</figure>
+
+<figure>
+
+![](/images/blogs/tech/working-with-error-boundaries-in-react/figure-09.png)
+
+<figcaption>Similarly, we have a specific Error Boundary for the Product Page</figcaption>
+</figure>
+
+<figure>
+
+![](/images/blogs/tech/working-with-error-boundaries-in-react/figure-10.png)
+
+<figcaption>In the Product Page, we have the Similar Products section which makes a separate API call that can fail even if the rest of the product has loaded successfully. So, we have a separate Component Error Boundary for it.</figcaption>
+</figure>
+
+<figure>
+
+![](/images/blogs/tech/working-with-error-boundaries-in-react/figure-11.png)
+
+<figcaption>If an error occurs with the Similar Products section, we hide the whole section itself</figcaption>
+</figure>
+
+## Wrapping up
+
+In the end, it depends on the developer on how to approach the handling of such errors. One might follow a completely different pattern of setting up these boundaries or even simply drop them and go for a different solution altogether. That’s the beauty of React as a framework, the freedom and flexibility it provides to the developer while approaching a problem.
+
+So now that you’ve learned a bit about Error Boundaries, let me know in the comments, how would YOU approach this problem? :)

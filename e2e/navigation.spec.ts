@@ -78,10 +78,19 @@ test('on phones, a compact header appears once the hero scrolls away', async ({
   await expect(quickLinks.getByRole('link', { name: 'Download résumé' })).toBeVisible();
 });
 
-test('blogs without posts show their empty state', async ({ page }) => {
+test('the tech blog lists its posts, newest first', async ({ page }) => {
   await page.goto(BLOGS.tech.path);
-  await expect(page.getByText(BLOGS.tech.emptyMessage)).toBeVisible();
+  const posts = page.getByRole('main').getByRole('listitem');
 
+  await expect(posts.first()).toBeVisible();
+  await expect(page.getByText(BLOGS.tech.emptyMessage)).toBeHidden();
+  const dates = await posts
+    .locator('time')
+    .evaluateAll((times) => times.map((time) => time.getAttribute('datetime') ?? ''));
+  expect(dates).toEqual([...dates].sort().reverse());
+});
+
+test('a blog without posts shows its empty state', async ({ page }) => {
   await page.goto(BLOGS.travel.path);
   await expect(page.getByText(BLOGS.travel.emptyMessage)).toBeVisible();
 });

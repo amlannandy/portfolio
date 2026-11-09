@@ -1,0 +1,73 @@
+---
+title: 'My GSoC ’21 Journey: Getting Started'
+date: '2021-05-22'
+summary: 'The night of 17th May 2021 will always remain a memorable one for me.'
+tags: ['gsoc', 'open-source', 'google', 'scorelab', 'software-development']
+cover: '/images/blogs/tech/my-gsoc-21-journey-getting-started/cover.jpg'
+---
+
+The night of 17th May 2021 will always remain a memorable one for me. The projects for Google Summer of Code 2021 were supposed to be announced at 11:30 PM IST. But at 11:14 itself, I got an email from the GSoC team. I was so scared to open it. But all of that evaporated and turned into feelings of pure joy on reading a single line.
+
+> GSoC 2021: Congratulations, your proposal with SCoRe Lab has been accepted!
+
+As someone who’s extremely passionate about open source and software development in general, I’ve always wanted to be a part of GSoC, considered by many to be the pinnacle of open source for student developers.
+
+I tried last year too but couldn’t get selected, mostly due to my lack of experience. So, it’s a surreal feeling to get an opportunity to be a part of the program this year!
+
+## Finding out about SCoRe Lab
+
+<figure>
+
+![SCoRe (Sustainable Computing Research) logo](/images/blogs/tech/my-gsoc-21-journey-getting-started/figure-01.jpg)
+
+</figure>
+
+I found about SCoRe Lab while going through last year’s GSoC organizations in January. For me, it was the perfect organization to contribute to. Super interesting projects with great mentors and a very exciting tech stack. What more can one ask for?
+
+I began my journey here with the LabelLab project (Yes, that’s also my GSoC project!). The first week was a bit tough, getting used to the huge codebase. But after my first PR got merged, I couldn’t stop contributing! :)
+
+And once I started racking up those PRs, the rest of the process became so much smoother. Writing a proposal becomes much easier once you’ve spent some time and gained a good understanding of the project. Plus, my mentor was super-helpful and reviewed my proposal twice! Providing suggestions and helping clean off any chinks in the armor!
+
+You can find all my PRs related to the project [here](https://github.com/scorelab/LabelLab/pulls?q=is%3Apr+author%3Aamlannandy+is%3Aclosed+state%3Amerged) and my proposal [here](https://drive.google.com/file/d/1lqfnTeeKTtqyiyQGvweSLRJVAJymrmrA/view?usp=sharing)!
+
+## About the Project
+
+<figure>
+
+![LabelLab logo](/images/blogs/tech/my-gsoc-21-journey-getting-started/figure-02.png)
+
+</figure>
+
+**LabelLab** is an image labelling and classification tool for machine learning researchers. Originally visioned to work with images of animals only, it has now developed enough to work with all kinds of images.
+
+The project consists of 3 main components -
+
+1. Backend built using Flask, with MySQL serving as the database
+2. Frontend built with React.js
+3. Mobile Application built using Flutter
+
+A logged-in user can create projects using either the web or the mobile application at its current stage. Inside a project, one can add images, label them, and run classifications against a trained model. You can also add your own models and labels to a project.
+
+It also lets you create various teams in a project, each having their own role, and add other users as team members to contribute to that project.
+
+## My Plan for the Summer
+
+Over the next 3 months, my main goal is to improve the collaborative experience of the LabelLab mobile application. And I plan to achieve that with the implementation of the following features:
+
+1. **Creating an Activity Logging System:** To track all the activity across a project, one of my main goals this summer would be to create a logging system that will let one view all the contributions and actions done by various team members inside a project. This will include actions such as adding/removing images, labelling images, etc.
+2. **Intricate Role-based Access:** The aim is to restrict the actions of team members in a project based on what role they have been assigned. One would only perform tasks which they were assigned (E.g. adding labels, creating models, etc.)
+3. **Team-specific Chatrooms:** The plan is to implement a team-wise chatroom system where members could discuss progress regarding the team and the entire project.
+
+For achieving this, I’d be working on the mobile application as well as the backend! Besides that, I’d be making some other minor changes to the mobile application as well, such as:
+
+1. Upgrading to Flutter 2.0
+2. Creating a backend service selection functionality
+3. Writing unit tests for all the API endpoints being used
+4. Fixing some existing bugs
+5. And, of course, updating the documentation to show all the work that has been done this summer!
+
+## Signing off
+
+Well, I’ve my work cut out for this summer. I'd get to cover just so many new and interesting concepts while working on this project. I’m really excited and can’t wait for the coding period to start (from 7th June btw!).
+
+I plan to document my progress on the project every week once the coding period starts. Till then, goodbye! And may the source be with you! :)

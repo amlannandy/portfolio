@@ -1,0 +1,68 @@
+---
+title: 'My GSoC ’21 Journey: Week 7'
+date: '2021-07-23'
+summary: 'This week, I started work on improving team management inside projects in the web application.'
+tags: ['gsoc', 'gsoc2021', 'react', 'javascript', 'web-development']
+cover: '/images/blogs/tech/my-gsoc-21-journey-week-7/cover.jpg'
+---
+
+This week, I started work on improving team management inside projects in the web application. Work on it was partially done during GSoC ’20, and I decided to refine it this summer by implementing a more detailed team structure, better division of tasks, and role-based access control.
+
+> _If you’re new to my blogs, check out the previous ones to better understand what I’m doing._
+>
+> [_Introductory Blog_](/blogs/tech/my-gsoc-21-journey-getting-started)
+>
+> [_Week 1: Migrating to Flutter 2.0 and implementing backend service selection_](/blogs/tech/my-gsoc-21-journey-week-1)
+>
+> [_Week 2: Implementing project activity tracking_](/blogs/tech/my-gsoc-21-journey-week-2)
+>
+> [_Week 3: Improving team management_](/blogs/tech/my-gsoc-21-journey-week-3)
+>
+> [_Week 4: Building a team-wise chat system_](/blogs/tech/my-gsoc-21-journey-week-4)
+>
+> [_Week 5: Documentation and testing_](/blogs/tech/my-gsoc-21-journey-week-5)
+>
+> [_Week 6: Planning work on the frontend_](/blogs/tech/my-gsoc-21-journey-week-6)
+
+## Implementation
+
+I worked on team management in the mobile and backend section of the project in the 3rd of GSoC itself. You can read about its details in my Week 3 blog [here](/blogs/tech/my-gsoc-21-journey-week-3).
+
+All I had to do this week was to implement those changes in the web application that I did in the mobile application back then. That includes -
+
+1. Implementing the functionality to view the details of a team (members, recent activity, etc)
+2. Implementing the functionality to create/edit/delete a team
+3. Implementing the functionality to add/remove members from/to a team
+4. Adding role-based access control i.e. specific actions within a project can only be done by members with a suitable role
+
+**For example -** models can be added/deleted/edited only by members who have **_admin_** or **_models_** role
+
+and some other minor changes.
+
+<figure>
+
+![](/images/blogs/tech/my-gsoc-21-journey-week-7/figure-01.gif)
+
+<figcaption>Adding a Team Member</figcaption>
+</figure>
+
+<figure>
+
+![](/images/blogs/tech/my-gsoc-21-journey-week-7/figure-02.gif)
+
+<figcaption>Editing a Team</figcaption>
+</figure>
+
+## Challenges Faced
+
+While I had made contributions to my project before GSoC, they were mostly limited to the mobile and backend sections. So, the frontend codebase was very unfamiliar to me. Plus, the codebase used exclusively class-based components, while I had worked mostly with functional components before.
+
+So while getting familiar with the codebase provided to be quite difficult initially, it eventually turned out to be a great learning experience, as I got to explore various new concepts such as HOCs, using redux with it, etc.
+
+## Signing Off
+
+The work I’ve done this week can be seen in the PR provided below:
+
+[#613 — \[Frontend\] Improved Team Management](https://github.com/scorelab/LabelLab/pull/613)
+
+Next week, I’ll move on to implementing activity tracking inside projects in the web application! Hope you give it a read too. Until then, stay safe, and may the source be with you! :)

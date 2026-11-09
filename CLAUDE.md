@@ -312,6 +312,18 @@ cover: '/images/blogs/tech/post-slug/cover.jpg'
 - Style MDX content with CSS Modules and design tokens. Do not copy the inline `style` examples from Next's docs.
 - Remark and rehype plugins are configured in `next.config.ts` under `createMDX`. Turbopack requires plugin names as strings with serializable options (`'remark-gfm'`, `['remark-toc', { heading: 'Contents' }]`), never imported functions.
 - Post images live in `public/images/blogs/<tech|travel>/<slug>/`, referenced from frontmatter by their public path (`cover: '/images/blogs/tech/my-post/cover.jpg'`). Blur placeholders are generated at build time with `sharp` (`src/lib/blurDataUrl.ts`); a missing image fails the build.
+- Body images also live in that folder. Write each one as a markdown image inside a `<figure>`, with an optional `<figcaption>`, keeping the blank lines so MDX parses the image as markdown:
+
+  ```mdx
+  <figure>
+
+  ![Alt text, or empty when the caption describes the image](/images/blogs/tech/my-post/figure-01.png)
+
+  <figcaption>Caption</figcaption>
+  </figure>
+  ```
+
+- Listings read posts once when the page module loads, so a running `npm run dev` won't show a newly added post until it's restarted.
 - Not decided yet (ask before assuming): syntax highlighting.
 
 ### Portfolio data
