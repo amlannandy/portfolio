@@ -101,16 +101,16 @@ If the hook fails, fix the reported problem and commit again. Do not use `--no-v
 
 ```
 src/
-  app/            (exists) Routing only: layout, page, route.ts, loading/error, sitemap, opengraph-image, globals.css
-  components/     (planned)
+  app/            (exists) Routing only: layout, page, route.ts, loading/error, sitemap, opengraph-image, globals.scss
+  components/     (exists)
     ui/           Small reusable primitives (Button, Card, Tag)
     sections/     Page-level blocks (Hero, About, Projects, Experience, Contact)
   content/        (planned) Blog posts as MDX: tech/<slug>.mdx, travel/<slug>.mdx
-  data/           (planned) Typed content (projects, experience, socials) as TS, not hardcoded in JSX
-  lib/            (planned) Pure helpers and utilities
-  hooks/          (planned) Client-side React hooks
+  data/           (exists) Typed content (projects, experience, socials) as TS, not hardcoded in JSX
+  lib/            (exists) Pure helpers and utilities
+  hooks/          (exists) Client-side React hooks
   types/          (exists) Shared TypeScript types (mdx.d.ts types MDX frontmatter)
-  styles/         (planned) Sass-only helpers: _breakpoints.scss, _mixins.scss
+  styles/         (exists) Sass-only helpers: _breakpoints.scss, _mixins.scss
   mdx-components.tsx  (exists) Required by @next/mdx: maps MDX elements to components
 public/           (exists) Static assets served at /
 ```
@@ -150,7 +150,6 @@ Add other files only when needed, on first use: `Button.test.tsx`, `types.ts` (i
 - Each component folder has a `styles.module.scss`, imported as `import styles from "./styles.module.scss"`. It must be `.module.scss`: a plain `styles.scss` is global CSS and can leak across routes.
 - Class names are camelCase (`styles.primaryButton`). Don't target bare elements globally from a component stylesheet.
 - Colors, spacing and type come from CSS custom properties (see Styling & Theming); Sass-only helpers (breakpoints, mixins) live in `src/styles/` and are pulled in with `@use`.
-- `sass` is not installed yet. Run `npm i -D sass` before adding the first component with styles.
 
 ### Reference example
 
@@ -182,12 +181,12 @@ export type { ButtonProps } from './Button';
 
 ## Styling & Theming
 
-Design values are CSS custom properties; Sass is for structure (nesting, breakpoints, mixins). The visual design is not decided yet: values marked `TBD` are placeholders to fill in, and the structure around them is what to follow.
+Design values are CSS custom properties; Sass is for structure (nesting, breakpoints, mixins). Values come from the Power design system (the Design canvas for this site); `src/app/globals.scss` is the source of truth.
 
 ### Where things live
 
-- `src/app/globals.scss` (currently `globals.css`; rename once `sass` is installed): reset, base element styles, and all `:root` design tokens. Imported once in the root layout. This is the only global stylesheet.
-- `src/styles/_breakpoints.scss`, `_mixins.scss`: Sass-only helpers, no CSS output on their own. Use via `@use "@portfolio/styles/breakpoints" as bp;`-style imports (confirm the resolution works with Sass before relying on it, otherwise use a relative path).
+- `src/app/globals.scss`: reset, base element styles, and all `:root` design tokens. Imported once in the root layout. This is the only global stylesheet.
+- `src/styles/_breakpoints.scss`, `_mixins.scss`: Sass-only helpers, no CSS output on their own. Use via relative imports, e.g. `@use '../../../styles/breakpoints' as bp;` (the `@portfolio` alias is not set up for Sass).
 - Component styles: `styles.module.scss` per component (see Component Conventions).
 
 ### Design tokens
@@ -197,22 +196,22 @@ Components must use tokens, never hardcoded colors, font sizes or spacing values
 | Group            | Naming                               | Examples                                                                                                  |
 | ---------------- | ------------------------------------ | --------------------------------------------------------------------------------------------------------- |
 | Color (semantic) | `--color-<role>`                     | `--color-bg`, `--color-surface`, `--color-text`, `--color-text-muted`, `--color-accent`, `--color-border` |
-| Spacing          | `--space-<step>`                     | `--space-1` ... `--space-8` (scale: TBD)                                                                  |
-| Type             | `--font-<role>`, `--text-<size>`     | `--font-sans`, `--font-mono`, `--text-sm` ... `--text-4xl` (TBD)                                          |
-| Radius / shadow  | `--radius-<size>`, `--shadow-<size>` | TBD                                                                                                       |
+| Spacing          | `--space-<step>`                     | `--space-1` ... `--space-9` (0.25rem–6rem)                                                                |
+| Type             | `--font-<role>`, `--text-<size>`     | `--font-sans`, `--font-mono`, `--text-xs` ... `--text-3xl`, `--text-display`                              |
+| Radius / shadow  | `--radius-<size>`, `--shadow-<name>` | `--radius-sm`, `--radius-md`, `--radius-pill`, `--shadow-bar`                                             |
 
 - Name colors by role, not by hue (`--color-accent`, not `--color-blue`), so themes can swap values without renaming.
-- Fonts are loaded with `next/font` in `app/layout.tsx` (currently Geist) and exposed as `--font-geist-sans` / `--font-geist-mono`. Map them to `--font-sans` / `--font-mono` in `:root`; the scaffold's `Arial` body font should be replaced by `var(--font-sans)`.
-- Palette, type scale and spacing values are `TBD` until the design is chosen. Do not invent them silently: ask.
+- Fonts are loaded with `next/font` in `app/layout.tsx` (IBM Plex Mono, used for all text) and exposed as `--font-plex-mono`, which `:root` maps to `--font-sans` / `--font-mono`.
+- Don't invent new palette, type or spacing values silently: take them from the design, or ask.
 
 ### Light / dark theme
 
-Supports the system preference plus a manual toggle (light, dark, or system).
+Follows the system preference until the visitor uses the toggle, a two-state light/dark switch (no separate "system" option).
 
 - Light values are the `:root` defaults. Dark values are applied in two places, which is the only repetition allowed; wrap the dark token map in one Sass mixin so it's defined once:
   - `@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { ...dark tokens } }`
   - `:root[data-theme="dark"] { ...dark tokens }`
-- The user's choice is stored in `localStorage` (try/catch every access) and applied as `data-theme` on `<html>`. "System" means no `data-theme` attribute.
+- The user's choice is stored in `localStorage` (try/catch every access) and applied as `data-theme` on `<html>`. With no stored choice there is no `data-theme` attribute, so the OS preference applies.
 - To avoid a flash of the wrong theme, set `data-theme` from `localStorage` with a small inline script in the root layout `<head>` that runs before paint, and add `suppressHydrationWarning` to `<html>`. Read the Next docs on scripts in `node_modules/next/dist/docs/` before implementing.
 - The toggle is a small `"use client"` component in `components/ui/ThemeToggle/`. It must render nothing theme-dependent until mounted, so server and client markup match.
 - Set `color-scheme` on `:root` per theme so native controls and scrollbars match.

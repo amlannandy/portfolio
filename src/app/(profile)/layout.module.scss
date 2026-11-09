@@ -1,0 +1,12 @@
+@use '../../styles/breakpoints' as bp;
+@use '../../styles/mixins';
+
+.main {
+  @include mixins.container;
+
+  padding-block: var(--space-6) var(--space-7);
+
+  @include bp.up(md) {
+    padding-block: var(--space-7) var(--space-9);
+  }
+}

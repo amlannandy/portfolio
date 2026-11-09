@@ -1,0 +1,79 @@
+@use '../../../styles/breakpoints' as bp;
+@use '../../../styles/mixins';
+
+.compactHeader {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  justify-content: center;
+  height: var(--compact-header-height);
+  padding-inline: var(--gutter);
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-border-soft);
+  box-shadow: var(--shadow-bar);
+
+  &[hidden] {
+    display: none;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    animation: slide-in 0.22s ease-out;
+  }
+
+  @include bp.up(md) {
+    &,
+    &[hidden] {
+      display: none;
+    }
+  }
+}
+
+.row {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: space-between;
+
+  &:last-child {
+    justify-content: flex-start;
+  }
+}
+
+.name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: var(--text-lg);
+  font-weight: 700;
+  letter-spacing: var(--tracking-display);
+  white-space: nowrap;
+}
+
+.resume {
+  @include mixins.icon-circle;
+
+  color: var(--color-on-accent);
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-accent-inset);
+
+  @include mixins.hover {
+    color: var(--color-on-accent);
+    background: var(--color-accent-hover);
+    border-color: var(--color-accent-hover);
+  }
+}
+
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

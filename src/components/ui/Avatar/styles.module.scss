@@ -1,0 +1,24 @@
+.avatar {
+  position: relative;
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  container-type: inline-size;
+  overflow: hidden;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+}
+
+.photo {
+  object-fit: cover;
+}
+
+.initials {
+  // Scales with the avatar, whatever size the parent gives it.
+  font-size: 26cqi;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
