@@ -1,0 +1,59 @@
+---
+title: 'My GSoC ’21 Journey: Week 9'
+date: '2021-08-07'
+summary: 'With only a couple of weeks remaining for the final evaluations, I’m also nearing the end of all development-related related work on my project.'
+tags: ['gsoc', 'gsoc2021', 'open-source', 'react', 'reactjs']
+cover: '/images/blogs/tech/my-gsoc-21-journey-week-9/cover.jpg'
+---
+
+With only a couple of weeks remaining for the final evaluations, I’m also nearing the end of all development-related related work on my project. This week, I focussed on implementing the Chat system in the React.js frontend.
+
+> _If you’re new to my blogs, check out the previous ones to better understand what I’m doing._
+>
+> [_Introductory Blog_](/blogs/tech/my-gsoc-21-journey-getting-started)
+>
+> [_Week 1: Migrating to Flutter 2.0 and implementing backend service selection_](/blogs/tech/my-gsoc-21-journey-week-1)
+>
+> [_Week 2: Implementing project activity tracking_](/blogs/tech/my-gsoc-21-journey-week-2)
+>
+> [_Week 3: Improving team management_](/blogs/tech/my-gsoc-21-journey-week-3)
+>
+> [_Week 4: Building a team-wise chat system_](/blogs/tech/my-gsoc-21-journey-week-4)
+>
+> [_Week 5: Documentation and testing_](/blogs/tech/my-gsoc-21-journey-week-5)
+>
+> [_Week 6: Planning work on the frontend_](/blogs/tech/my-gsoc-21-journey-week-6)
+>
+> [_Week 7: Improving team management in frontend_](/blogs/tech/my-gsoc-21-journey-week-7)
+>
+> [_Week 8: Implementing project activity tracking in frontend_](/blogs/tech/my-gsoc-21-journey-week-8)
+
+The goal here was to ensure better interaction and collaboration inside every project. One of the ways to do that was to provide chat functionality in every team so that members can better discuss progress on the project and divide tasks among themselves.
+
+## Implementation
+
+The backend implementation of the chat functionality was already done in Week 4 (You can read about it [here](/blogs/tech/my-gsoc-21-journey-week-4)). For maintaining a live feed of messages, I used web sockets, more specifically socket.io to achieve it. Flask provides a great package [Flask-SocketIO](https://flask-socketio.readthedocs.io/en/latest/) to implement in the backend.
+
+Moving on to the frontend, I used [socket.io-client](https://www.npmjs.com/package/socket.io-client) which is the JavaScript client for socket.io in order to connect to the backend. Here, I basically had to handle 2 events -
+
+1. **_send_message_** - Used to send messages.
+2. **_receive_message_** - Used to detect when some other user has sent a message. It is automatically triggered when any user sends a message.
+
+These 2 events working in tandem help in ensuring that the user always views a live feed of messages in the web application.
+
+<figure>
+
+![](/images/blogs/tech/my-gsoc-21-journey-week-9/figure-01.gif)
+
+<figcaption>The Chat System in action!</figcaption>
+</figure>
+
+## Signing Off
+
+The work I’ve done this week can be seen in the PR provided below:
+
+[#615 — \[Frontend\] Implemented Team-wise Chat System](https://github.com/scorelab/LabelLab/pull/615)
+
+And with this PR, all my development-related work on the project is finished. For the last week, I’ll be focussing just on updating documentation for the backend and frontend, and also prepare my GSoC report which will be submitted to the mentors.
+
+Next week’s blog is probably not going to be very interesting. But I hope that you will still give it a read! Stay safe, and may the source be with you! :)

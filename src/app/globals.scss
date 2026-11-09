@@ -39,6 +39,7 @@
   --text-2xl: 2.375rem;
   --text-3xl: 3.5rem;
   --text-display: clamp(2.5rem, 1rem + 6vw, 4rem);
+  --text-title: clamp(1.75rem, 1rem + 3vw, 2.75rem);
   --leading-tight: 1.05;
   --leading-body: 1.5;
   --tracking-display: -0.01em;
@@ -57,12 +58,14 @@
 
   // Layout
   --container-max: 73.75rem;
+  --reading-max: 42rem;
   --gutter: var(--space-4);
   --gutter-wide: var(--space-5);
   --tap-size: 2.75rem;
   --compact-header-height: 7.75rem;
 
   // Radius / shadow
+  --radius-xs: 0.25rem;
   --radius-sm: 0.625rem;
   --radius-md: 1.125rem;
   --radius-pill: 9999px;

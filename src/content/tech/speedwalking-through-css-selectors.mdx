@@ -1,0 +1,121 @@
+---
+title: 'Speedwalking through CSS Selectors'
+date: '2022-09-11'
+summary: 'CSS Selectors are utilities provided that allow the developer to target HTML elements and apply a style to them specifically.'
+tags: ['html', 'css', 'web-development', 'web-design']
+cover: '/images/blogs/tech/speedwalking-through-css-selectors/cover.png'
+---
+
+CSS Selectors are utilities provided that allow the developer to target HTML elements and apply a style to them specifically. Here are a few common ones everyone should be aware of.
+
+**Universal Selector ( \* )**
+
+As simple as it sounds. Used to target EVERY element in the HTML. Useful to set up a theme/global style.
+
+<figure>
+
+![](/images/blogs/tech/speedwalking-through-css-selectors/figure-01.png)
+
+<figcaption>Universal Selector</figcaption>
+</figure>
+
+**Class Selector ( .a )**
+
+The most obvious one that everyone knows. Selects all elements with class name **a** (we can also call them **_a elements_**).
+
+<figure>
+
+![](/images/blogs/tech/speedwalking-through-css-selectors/figure-02.png)
+
+<figcaption>Class Selector</figcaption>
+</figure>
+
+**ID Selector ( #i )**
+
+Also something everyone knows but rarely uses. Used to target a single element usually. Selects the element whose id is **_i_**.
+
+<figure>
+
+![](/images/blogs/tech/speedwalking-through-css-selectors/figure-03.png)
+
+<figcaption>ID Selector</figcaption>
+</figure>
+
+**Multiclass Selector ( .a.b )**
+
+Selects all the elements that have both **_a_** and **b** class names.
+
+<figure>
+
+![](/images/blogs/tech/speedwalking-through-css-selectors/figure-04.png)
+
+<figcaption>Multiclass Selector</figcaption>
+</figure>
+
+**Child Combinator ( a \> b )**
+
+Selects all **_b elements_** that are directly present **(immediate children)** inside **_a elements_**.
+
+<figure>
+
+![](/images/blogs/tech/speedwalking-through-css-selectors/figure-05.png)
+
+<figcaption>Child Combinator</figcaption>
+</figure>
+
+**Descendant Combinator ( a b )**
+
+Selects all **_b elements_** that are anywhere inside **_a elements_**, not just direct children.
+
+<figure>
+
+![](/images/blogs/tech/speedwalking-through-css-selectors/figure-06.png)
+
+<figcaption>Descendant Combinator</figcaption>
+</figure>
+
+**Adjacent Sibling Combinator ( a + b )**
+
+Used to select all **_b elements_** that are immediately next to **_a elements_** on the same level.
+
+<figure>
+
+![](/images/blogs/tech/speedwalking-through-css-selectors/figure-07.png)
+
+<figcaption>Adjacent Sibling Combinator</figcaption>
+</figure>
+
+**General Sibling Combinator ( a ~ b )**
+
+Selects all **_b elements_** that occur anywhere after **_a elements_**, no matter the level or position.
+
+<figure>
+
+![](/images/blogs/tech/speedwalking-through-css-selectors/figure-08.png)
+
+<figcaption>General Sibling Combinator</figcaption>
+</figure>
+
+**Tag + Class Selector ( t.a )**
+
+Select all the elements that have tag **_t_** and class **_a_**.
+
+<figure>
+
+![](/images/blogs/tech/speedwalking-through-css-selectors/figure-09.png)
+
+<figcaption>Tag + Class Selector</figcaption>
+</figure>
+
+**Attribute Selector ( a\[x=y\] )**
+
+Select all **_a elements_** that have the **_x_** attribute set to **_y_**.
+
+<figure>
+
+![](/images/blogs/tech/speedwalking-through-css-selectors/figure-10.png)
+
+<figcaption>Attribute Selector</figcaption>
+</figure>
+
+That’s all for today. On the never-ending journey of struggling with CSS, hope this lessens the hassle a little bit.

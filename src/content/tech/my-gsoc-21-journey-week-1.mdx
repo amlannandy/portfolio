@@ -1,0 +1,63 @@
+---
+title: 'My GSoC ’21 Journey: Week 1'
+date: '2021-06-12'
+summary: 'At last, the wait is over!'
+tags: ['gsoc', 'gsoc2021', 'open-source', 'google', 'flutter']
+cover: '/images/blogs/tech/my-gsoc-21-journey-week-1/cover.png'
+---
+
+At last, the wait is over! After the 3 week community bonding period from 17th May to 6th June, the coding period for Google Summer of Code 2021 has finally begun!
+
+While the bonding period was a great and very enjoyable experience, my hands have been itching to write some code and move my project forward. The majority of the past 3 weeks were spent finalizing the project milestones and making any other necessary changes. I was so excited to work on the project that I even began my work a few days earlier!
+
+<figure>
+
+![Animated GIF of a cat typing furiously on a laptop](/images/blogs/tech/my-gsoc-21-journey-week-1/figure-01.gif)
+
+</figure>
+
+> In case you haven’t checked out my previous blog yet, give it a read [here](/blogs/tech/my-gsoc-21-journey-getting-started) to get a basic overview of the project I’m working on, before we get into the nitty gritty details below!
+
+My work for this week mostly involved the initial setup and cleaning of the Mobile Application. I was also developing a small feature to make the connection process from Mobile Application to Backend a bit easier.
+
+## Migrating to Flutter 2.0
+
+One of the major things to be implemented this summer was to update the Mobile Application to work with Flutter 2.0, fully supporting null safety.
+
+A brief overview of the work that I did under it:
+
+1. Upgrading all packages to their null safe versions.
+2. Some packages haven’t had a null safety support release yet, so I had to look for other options that provided the same functionality.
+3. The codebase also had to be refactored to support null safety. Fortunately, that was done easily using the Dart Migration Tool.
+4. And finally, I had to fix all the deprecation warnings and errors caused by the migration of all these packages.
+
+## Implementing Backend Service Selection Functionality
+
+Previously, the URL for the backend service to be used by the Mobile Application had to be provided manually through a config file. This meant that every time one switched to a new instance of the backend, they had to change the config file, which turned out to be very tedious!
+
+So, the plan here was to implement a backend service selection screen before the authentication flow, where the user would have to provide the base URL, which I will then use for making all the API requests. This allowed the user to switch between various instances of the backend without having to rebuild the APK.
+
+<figure>
+
+![](/images/blogs/tech/my-gsoc-21-journey-week-1/figure-02.gif)
+
+<figcaption>Demo for Backend Service Selection</figcaption>
+</figure>
+
+The overall workflow goes something like this:
+
+1. Every time the app opens, it checks if there is a URL stored in the local storage.
+2. If no, it takes you to the Backend Service Selection Screen, where you have to provide the URL
+3. If yes, then it loads the home screen and, in the future, uses that URL for making all the API requests.
+4. For doing so, an interceptor has been added, which goes through every request being made, fetches the URL from local storage, sets it as the base URL, and then lets that request execute.
+5. One can also later update this URL from the settings if the need arises.
+
+## Closing off
+
+This being the 1st week of the coding period, most of the stuff I had to do was pretty basic and straightforward. I expect things to get busier next week as I start exploring the Flask backend of the project! You can check out my pull requests down below to know in detail about the code implementation:
+
+[#603: Migrate to Flutter 2.0 and fix Dependency Versions](https://github.com/scorelab/LabelLab/pull/603)
+
+[#605: Implemented Backend Service Selection functionality in Mobile Application](https://github.com/scorelab/LabelLab/pull/605)
+
+Stay tuned for the 2nd week’s blog; until then, may the source be with you! :)

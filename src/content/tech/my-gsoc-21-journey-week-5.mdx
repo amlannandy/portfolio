@@ -1,0 +1,60 @@
+---
+title: 'My GSoC ’21 Journey: Week 5'
+date: '2021-07-13'
+summary: 'Last week, I completed all the development work that had to be done on the Flask API and Flutter mobile application.'
+tags: ['flutter', 'dart', 'open-source', 'gsoc', 'google']
+cover: '/images/blogs/tech/my-gsoc-21-journey-week-5/cover.jpg'
+---
+
+Last week, I completed all the development work that had to be done on the Flask API and Flutter mobile application. So this week, I’m moving towards testing and documentation, an underrated yet crucial part of software development!
+
+<figure>
+
+![Meme of a cat in a suit reading a newspaper, captioned “I should start writing unit tests”](/images/blogs/tech/my-gsoc-21-journey-week-5/figure-01.jpg)
+
+</figure>
+
+> _If you’re new to my blogs, do check out the previous ones for a better understanding of what I’m doing._
+>
+> [_Introductory Blog_](/blogs/tech/my-gsoc-21-journey-getting-started)
+>
+> [_Week 1: Migrating to Flutter 2.0 and implementing backend service selection_](/blogs/tech/my-gsoc-21-journey-week-1)
+>
+> [_Week 2: Implementing project activity tracking_](/blogs/tech/my-gsoc-21-journey-week-2)
+>
+> [_Week 3: Improving team management_](/blogs/tech/my-gsoc-21-journey-week-3)
+>
+> [_Week 4: Building a team-wise chat system_](/blogs/tech/my-gsoc-21-journey-week-4)
+
+## Unit Testing with Mockito
+
+Writing unit tests is an essential part of software development, in this case, to ensure that the code I’ve written to connect to the backend is working properly.
+
+Connecting to a live backend just for unit tests can take too much time and sometimes also cause unexpected errors. Thankfully, the **_mockito_** package provides a great alternative to that by providing a mock server that one can connect to for testing. Over the course of this week, I created unit tests for all the API endpoints that were being used by the Mobile Application. Being relatively new to the concept of testing, this was a great learning experience for me!
+
+<figure>
+
+![](/images/blogs/tech/my-gsoc-21-journey-week-5/figure-02.png)
+
+<figcaption>What every dev wants to see!</figcaption>
+</figure>
+
+## Updating the Documentation
+
+The next step was to update the documentation reflecting all the work that has been done over the past 5 weeks. Over the past 3 years, the project has increased a lot in size, and it has become difficult to keep all the documentation in a single readme.
+
+So I decided to move the existing documentation to Github Wiki and then continue to update it from there. Github Wiki allows you to split the docs into multiple inter-linked pages which is very beneficial for large-scale projects. For this week, I completed the documentation for the Mobile Section of the project. And once I’m done with development on the frontend, the documentation for the web section will be updated too.
+
+You can check it out [here](https://github.com/scorelab/LabelLab/wiki).
+
+## Signing off
+
+Having completed all the work for the mobile and backend section of the project, next week I’ll be moving on to the frontend built with React.js and start work on bringing it up-to-date with the mobile application!
+
+These are the PRs I created this week:
+
+[#611 — \[Mobile\] Added tests for all used API Endpoints](https://github.com/scorelab/LabelLab/pull/611)
+
+[#612 — Fixed bugs and implemented missed features](https://github.com/scorelab/LabelLab/pull/612)
+
+Hope you give next week’s blog a read too. Until then, stay safe, and may the source be with you! :)

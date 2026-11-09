@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 
+import { BLOGS } from '../src/data/blogs';
 import { NAV_ITEMS } from '../src/data/navigation';
 
 // Tab labels come from the data, so renaming a tab doesn't break these tests.
@@ -75,4 +76,34 @@ test('on phones, a compact header appears once the hero scrolls away', async ({
 
   await expect(quickLinks).toBeVisible();
   await expect(quickLinks.getByRole('link', { name: 'Download résumé' })).toBeVisible();
+});
+
+test('the tech blog lists its posts, newest first', async ({ page }) => {
+  await page.goto(BLOGS.tech.path);
+  const posts = page.getByRole('main').getByRole('listitem');
+
+  await expect(posts.first()).toBeVisible();
+  await expect(page.getByText(BLOGS.tech.emptyMessage)).toBeHidden();
+  const dates = await posts
+    .locator('time')
+    .evaluateAll((times) => times.map((time) => time.getAttribute('datetime') ?? ''));
+  expect(dates).toEqual([...dates].sort().reverse());
+});
+
+test('a blog without posts shows its empty state', async ({ page }) => {
+  await page.goto(BLOGS.travel.path);
+  await expect(page.getByText(BLOGS.travel.emptyMessage)).toBeVisible();
+});
+
+test('the active tab is scrolled into view in the tab strip', async ({ page }) => {
+  const sections = page.getByRole('navigation', { name: 'Sections' });
+  const lastTab = TABS[TABS.length - 1];
+
+  // On a direct visit to a tab near the end of the strip.
+  await page.goto(lastTab.path);
+  await expect(sections.getByRole('link', { name: lastTab.name })).toBeInViewport({ ratio: 1 });
+
+  // And after navigating back to the first tab.
+  await sections.getByRole('link', { name: TABS[0].name }).click();
+  await expect(sections.getByRole('link', { name: TABS[0].name })).toBeInViewport({ ratio: 1 });
 });

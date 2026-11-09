@@ -1,0 +1,60 @@
+---
+title: 'My GSoC ’21 Journey: Week 3'
+date: '2021-06-27'
+summary: 'After implementing the functionality to track activity inside projects last week, I’m now focussing on improving an existing feature in the application, which is Team Management.'
+tags: ['gsoc', 'gsoc2021', 'flutter', 'python', 'open-source']
+cover: '/images/blogs/tech/my-gsoc-21-journey-week-3/cover.jpg'
+---
+
+After implementing the functionality to track activity inside projects last week, I’m now focussing on improving an existing feature in the application, which is Team Management.
+
+> If you’re new to my GSoC blogs, check out my [introductory](/blogs/tech/my-gsoc-21-journey-getting-started), [week 1](/blogs/tech/my-gsoc-21-journey-week-1), and [week 2](/blogs/tech/my-gsoc-21-journey-week-2) blogs first to get a better understanding of the stuff written below! Context is important!
+
+In LabelLab, one can create multiple teams inside a project, each having a different role. E.g in a project we can have a models team, which will be responsible for creating and training models. And we can have another image team, which will be responsible for adding and labeling images.
+
+Having such a system allows the project admin to better organize the workflow and distribute various tasks among the members.
+
+<figure>
+
+![“Apes together strong” scene from Rise of the Planet of the Apes](/images/blogs/tech/my-gsoc-21-journey-week-3/figure-01.png)
+
+</figure>
+
+## Starting with the Backend
+
+Work on developing a team system was started during last year’s GSoC itself. It provided basic functionalities such as creating a team, adding members to it, etc. I decided to improve this system further by implementing a couple of minor features-
+
+- **Role-based access control:** In the current system, a user should be able to use only the routes meant for his/her role i.e. a models team member should only be able to use model-specific routes. To facilitate that, I created a number of middleware functions that provide such role-based access control using python decorators.
+
+> E.g. **@image_only** — When this decorator is added on a route, it can only be used by a project member with images role.
+
+- **Granting/revoking admin privilege to other members:** Currently, there can be only a single admin in each project. But now that we’re restricting the actions of project members, it makes sense to have multiple admins in a project for better management. An admin can do all the actions that project members can (images, models, labels, etc) as well as admin actions such as creating teams, adding members, editing project info, etc.
+
+## Mobile Implementation
+
+Last year, the mobile application wasn’t updated with the backend implementation of the team system, so I had to start the work from scratch here.
+
+It included listing all current teams in the Project Details Screen, with additional functions to create/delete teams and also add/remove members to/from them, all of which would be accessible to project admins only.
+
+<figure>
+
+![](/images/blogs/tech/my-gsoc-21-journey-week-3/figure-02.png)
+
+<figcaption>In the 2nd (User is a Project Admin) and 3rd image (User is a Models member), you can see that depending on the role of the project member, their actions inside a project may/may not be restricted</figcaption>
+</figure>
+
+Inside the Team Details Screen, one can see all activity logs related to that team in order to track its productivity as well as current team members, along with options to remove them or add new ones.
+
+You can also see the ‘View Chatroom’ button which isn’t working right now but should be functional next week when I will be developing a chat system for the project!
+
+## Signing off
+
+As I had to work on an existing feature this week instead of implementing a new one, the work was slightly harder, but also more rewarding and enjoyable! I managed to learn a lot about the huge codebase of the project built over the last 2 years, something which I believe will definitely help me in the upcoming weeks!
+
+Listed below are the PRs I made this week.
+
+[#607 — \[Backend\] Improved Team Management](https://github.com/scorelab/LabelLab/pull/607)
+
+[#608 — \[Mobile\] Improved Team Management](https://github.com/scorelab/LabelLab/pull/608)
+
+Also, do check out my [GitHub](https://github.com/amlannandy) profile if you want to see more interesting projects that I’m working on! Hope you read next week’s blog too. Till then, stay safe, and may the source be with you! :)

@@ -1,0 +1,71 @@
+---
+title: 'My GSoC ’21 Journey: Week 8'
+date: '2021-07-30'
+summary: 'Having started work on the web application last week, now I’m diving even deeper into its codebase and implementing one of the core features that I had planned this summer, project activity tracking!'
+tags: ['gsoc', 'gsoc2021', 'open-source', 'react', 'web-development']
+cover: '/images/blogs/tech/my-gsoc-21-journey-week-8/cover.jpg'
+---
+
+Having started work on the web application last week, now I’m diving even deeper into its codebase and implementing one of the core features that I had planned this summer, project activity tracking!
+
+> If you’re new to my blogs, check out the previous ones to better understand what I’m doing.
+>
+> [Introductory Blog](/blogs/tech/my-gsoc-21-journey-getting-started)
+>
+> [Week 1: Migrating to Flutter 2.0 and implementing backend service selection](/blogs/tech/my-gsoc-21-journey-week-1)
+>
+> [Week 2: Implementing project activity tracking](/blogs/tech/my-gsoc-21-journey-week-2)
+>
+> [Week 3: Improving team management](/blogs/tech/my-gsoc-21-journey-week-3)
+>
+> [Week 4: Building a team-wise chat system](/blogs/tech/my-gsoc-21-journey-week-4)
+>
+> [Week 5: Documentation and testing](/blogs/tech/my-gsoc-21-journey-week-5)
+>
+> [Week 6: Planning work on the frontend](/blogs/tech/my-gsoc-21-journey-week-6)
+>
+> [Week 7: Improving team management in frontend](/blogs/tech/my-gsoc-21-journey-week-7)
+
+## Implementing Project Activity Tracking
+
+If you didn’t get the time to check out my previous GSoC blogs, at least give the Week 2 blog a look [here](/blogs/tech/my-gsoc-21-journey-week-2), in which I implemented the backend and mobile section of Project Activity Tracking, as it is crucial to understand the rest of the blog.
+
+As the name suggests, the main purpose here is to track all activity inside a project, such
+
+- Adding/removing members to the project
+- Creating images and labels
+- Add/removing/labeling images
+- Creating/training model
+
+and much more…
+
+With the backend implementation already done, all that was left was to implement it in the frontend. The goal was to -
+
+1. Show all project activity in the Project Details Screen i.e. **_project-specific logs_**
+2. Show all team activity in Team Details Screen i.e. **_team-specific logs_**
+3. A separate project activity section where one can filter these activity logs to view **_category-specific_** and **_member-specific_** logs
+4. Each entity inside a project (image, label, model) has an option to view all changes done to it i.e **_entity-specific logs_**
+
+<figure>
+
+![](/images/blogs/tech/my-gsoc-21-journey-week-8/figure-01.gif)
+
+<figcaption>Viewing all activity for a project, team, category, member, or entity</figcaption>
+</figure>
+
+## Impressions
+
+Having grown accustomed to the codebase as well as working with class-based components, this week’s implementation was pretty straightforward. My work can be summarized the in following steps:
+
+1. Creating Redux actions and reducers for fetching project-specific, category-specific, member-specific, and entity-specific logs.
+2. Creating a Project Activity Screen to view these logs, with filtering options that work on basis of the props provided.
+3. Added recent activity section in Project Details and Team Details Screen.
+4. Added option in images, labels, and models which redirect to Project Activity Screen showing logs specific to them.
+
+## Signing Off
+
+The work I’ve done this week can be seen in the PR provided below:
+
+[#613 — \[Frontend\] Implemented Project Activity Tracking](https://github.com/scorelab/LabelLab/pull/614)
+
+Next week, I’ll move on to implementing a team-wise chat system in the web application! Hope you give it a read too. Until then, stay safe, and may the source be with you! :)

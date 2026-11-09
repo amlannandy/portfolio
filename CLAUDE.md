@@ -14,7 +14,7 @@ This is the personal website of a software engineer. It presents who they are, w
 - **Technical blog**: posts about software engineering, at `/blogs/tech`.
 - **Travel blog**: posts about travel, kept separate from the technical blog, at `/blogs/travel`.
 
-The two blogs are separate sections, each with its own listing and post pages. They are not one blog filtered by tag, so don't merge their routes, data or styling by default.
+The two blogs are separate sections, each with its own listing and post pages. They are not one blog filtered by tag, so don't merge their routes or data by default. Both listings use the shared `PostList` component.
 
 Every page must work on both mobile and desktop. Responsive layout is a requirement, not a polish step; see Breakpoints and responsive rules.
 
@@ -287,6 +287,8 @@ There are two kinds of content, stored differently.
 
 - One MDX file per post: `src/content/tech/<slug>.mdx` and `src/content/travel/<slug>.mdx`. The filename is the slug (lowercase kebab-case) and becomes the URL part under `/blogs/tech/` or `/blogs/travel/`.
 - Never put posts in a CMS or another format. Files under `src/content/` are not routes (they have no `page` file).
+- Files starting with `_` are not posts. Each blog folder has a `_template.mdx` to copy when starting a post (it also gives the post route's dynamic import a file to match before a blog has posts).
+- Don't use `{/* */}` comments or other JSX expressions that Prettier must parse in MDX: its MDX support predates MDX 2 and mangles them. Write plain markdown and JSX elements.
 - Each post starts with YAML frontmatter:
 
 ```mdx
@@ -296,21 +298,36 @@ date: '2026-01-31'
 summary: 'One sentence for listings and metadata.'
 tags: ['nextjs', 'typescript']
 draft: false
+cover: '/images/blogs/tech/post-slug/cover.jpg'
 ---
 ```
 
-- `title` and `date` are required. Quote the date (`'YYYY-MM-DD'`) so it stays a string. `summary`, `tags` and `draft` are optional.
-- Frontmatter is exported from each file as `frontmatter`, via `remark-frontmatter` and `remark-mdx-frontmatter` configured in `next.config.ts`. Its type is declared in `src/types/mdx.d.ts`; when you add a field, update that type and this list.
+- `title` and `date` are required. Quote the date (`'YYYY-MM-DD'`) so it stays a string. `summary`, `tags`, `draft` and `cover` are optional.
+- Frontmatter is exported from each file as `frontmatter`, via `remark-frontmatter` and `remark-mdx-frontmatter` configured in `next.config.ts`. Its type is `PostFrontmatter` in `src/types/post.ts` (used by `src/types/mdx.d.ts`); when you add a field, update that type, the validation in `parseFrontmatter` (`src/lib/posts.ts`) and this list.
 - Posts with `draft: true` must not appear in listings or be statically generated in production.
-- Each blog has its own dynamic route (`app/blogs/tech/[slug]`, `app/blogs/travel/[slug]`) that loads a post with a dynamic import of the `.mdx` file, with `generateStaticParams` and `dynamicParams = false` so unknown slugs 404. Listing pages read the content directory on the server (`fs`) and use each post's frontmatter. Shared loading helpers may live in `lib/` parameterized by blog; keep routes, listing UI and styling separate per blog.
+- Each blog has its own dynamic route (`app/blogs/tech/[slug]`, `app/blogs/travel/[slug]`) that loads a post with a dynamic import of the `.mdx` file. `generateStaticParams` prerenders every post via `getPostParams` (`src/lib/postRoutes.ts`), which returns a placeholder slug when a blog has no posts, since Cache Components needs at least one. `dynamicParams` is not allowed under Cache Components: the page calls `notFound()` for a slug that isn't a post. That renders the not-found page with a `noindex` tag but a 200 status (a soft 404), because the static shell has already streamed; a real 404 would need Proxy, which would run on every post view. Listing pages get their posts from `getPosts(blog)` in `src/lib/posts.ts`, which reads the content folder with `fs`, validates the frontmatter (bad content fails the build), works out reading time and makes the cover's blur placeholder. Call it at module scope in the page, not inside the component, so the route stays fully static with no revalidation. Keep each blog's routes separate.
 - Include the `.mdx` extension explicitly in dynamic imports, e.g. ``import(`@portfolio/content/tech/${slug}.mdx`)``.
 
 ### MDX components and plugins
 
-- `src/mdx-components.tsx` is required by `@next/mdx` in the App Router. Map MDX elements (headings, links, images, code blocks) to project components there.
+- `src/mdx-components.tsx` is required by `@next/mdx` in the App Router. Map MDX elements to project components there (links use `ContentLink`). Images are mapped in each post page instead, to `ContentImage` with that blog's image sizes from `getBlogImages`, so they render through `next/image`.
+- Post bodies are styled by `Prose` (`components/ui/Prose`): one stylesheet for every element MDX outputs.
 - Style MDX content with CSS Modules and design tokens. Do not copy the inline `style` examples from Next's docs.
 - Remark and rehype plugins are configured in `next.config.ts` under `createMDX`. Turbopack requires plugin names as strings with serializable options (`'remark-gfm'`, `['remark-toc', { heading: 'Contents' }]`), never imported functions.
-- Not decided yet (ask before assuming): where post images are stored, and syntax highlighting.
+- Post images live in `public/images/blogs/<tech|travel>/<slug>/`, referenced from frontmatter by their public path (`cover: '/images/blogs/tech/my-post/cover.jpg'`). Blur placeholders are generated at build time with `sharp` (`src/lib/blurDataUrl.ts`); a missing image fails the build.
+- Body images also live in that folder. Write each one as a markdown image inside a `<figure>`, with an optional `<figcaption>`, keeping the blank lines so MDX parses the image as markdown:
+
+  ```mdx
+  <figure>
+
+  ![Alt text, or empty when the caption describes the image](/images/blogs/tech/my-post/figure-01.png)
+
+  <figcaption>Caption</figcaption>
+  </figure>
+  ```
+
+- Listings read posts once when the page module loads, so a running `npm run dev` won't show a newly added post until it's restarted.
+- Not decided yet (ask before assuming): syntax highlighting.
 
 ### Portfolio data
 
