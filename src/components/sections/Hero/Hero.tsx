@@ -30,7 +30,12 @@ const Hero = ({ profile, socials, endMarkerId }: HeroProps) => (
       </h1>
       <p className={styles.bio}>{profile.bio}</p>
       <div className={styles.actions}>
-        <ButtonLink className={styles.resume} href={profile.resumeUrl} download>
+        <ButtonLink
+          className={styles.resume}
+          href={profile.resumeUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <Icon name="download" size={18} />
           View resume
         </ButtonLink>

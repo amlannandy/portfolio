@@ -10,6 +10,21 @@ test('profile has its required text fields filled in', () => {
   }
 });
 
+test('the about section has paragraphs with text and well-formed links', () => {
+  expect(PROFILE.about.length).toBeGreaterThan(0);
+  for (const paragraph of PROFILE.about) {
+    expect(paragraph.length).toBeGreaterThan(0);
+    for (const part of paragraph) {
+      if (typeof part === 'string') {
+        expect(part.trim()).not.toBe('');
+      } else {
+        expect(part.text.trim()).not.toBe('');
+        expect(part.href).toMatch(/^(\/|https:\/\/)\S*$/);
+      }
+    }
+  }
+});
+
 test('the avatar photo, if set, exists in public/', () => {
   if (PROFILE.avatarUrl === undefined) return;
   expect(PROFILE.avatarUrl).toMatch(/^\/\S+\.(jpg|jpeg|png|webp|avif)$/);
@@ -18,5 +33,5 @@ test('the avatar photo, if set, exists in public/', () => {
 
 test('profile email and resume link are well formed', () => {
   expect(PROFILE.email).toMatch(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
-  expect(PROFILE.resumeUrl).toMatch(/^\/\S+\.pdf$/);
+  expect(new URL(PROFILE.resumeUrl).protocol).toBe('https:');
 });

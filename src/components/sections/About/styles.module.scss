@@ -1,0 +1,36 @@
+@use '../../../styles/breakpoints' as bp;
+@use '../../../styles/mixins';
+
+// Spaced from the timelines below by the same gap the timelines use between each other.
+.about {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: var(--reading-max);
+  margin-bottom: var(--space-7);
+
+  @include bp.up(md) {
+    margin-bottom: var(--space-8);
+  }
+}
+
+.text {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+
+  @include bp.up(md) {
+    font-size: var(--text-md);
+  }
+}
+
+.link {
+  color: var(--color-text);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--color-accent);
+  text-underline-offset: 0.2em;
+
+  @include mixins.hover {
+    text-decoration-thickness: 2px;
+  }
+}
