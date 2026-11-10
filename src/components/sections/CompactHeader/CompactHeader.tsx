@@ -56,7 +56,13 @@ const CompactHeader = ({ name, resumeUrl, socials, watchId }: CompactHeaderProps
         <ThemeToggle />
       </div>
       <nav className={styles.row} aria-label="Quick links">
-        <a className={styles.resume} href={resumeUrl} download aria-label="Download résumé">
+        <a
+          className={styles.resume}
+          href={resumeUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="View résumé"
+        >
           <Icon name="download" size={18} />
         </a>
         <SocialLinks links={socials} />

@@ -75,7 +75,7 @@ test('on phones, a compact header appears once the hero scrolls away', async ({
   });
 
   await expect(quickLinks).toBeVisible();
-  await expect(quickLinks.getByRole('link', { name: 'Download résumé' })).toBeVisible();
+  await expect(quickLinks.getByRole('link', { name: 'View résumé' })).toBeVisible();
 });
 
 test('on phones, the compact header follows a gradual scroll down and back up', async ({
