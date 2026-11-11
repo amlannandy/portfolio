@@ -6,9 +6,9 @@
   inset: 0 0 auto;
   z-index: 10;
   display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  justify-content: center;
+  gap: var(--space-1);
+  align-items: center;
+  justify-content: space-between;
   height: var(--compact-header-height);
   padding-inline: var(--gutter);
   background: var(--color-bg);
@@ -19,9 +19,7 @@
     display: none;
   }
 
-  @media (prefers-reduced-motion: no-preference) {
-    animation: slide-in 0.22s ease-out;
-  }
+  @include mixins.slide-in;
 
   @include bp.up(md) {
     &,
@@ -31,24 +29,21 @@
   }
 }
 
-.row {
-  display: flex;
-  gap: var(--space-3);
-  align-items: center;
-  justify-content: space-between;
-
-  &:last-child {
-    justify-content: flex-start;
-  }
+.avatar {
+  width: var(--tap-size);
 }
 
-.name {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: var(--text-lg);
-  font-weight: 700;
-  letter-spacing: var(--tracking-display);
-  white-space: nowrap;
+// Gaps are tight enough for the avatar and six tap targets to fit on one line at 320px.
+.actions,
+.quickLinks {
+  display: flex;
+  gap: var(--space-1);
+  align-items: center;
+}
+
+.socials {
+  flex-wrap: nowrap;
+  gap: var(--space-1);
 }
 
 .resume {
@@ -63,17 +58,5 @@
     color: var(--color-on-accent);
     background: var(--color-accent-hover);
     border-color: var(--color-accent-hover);
-  }
-}
-
-@keyframes slide-in {
-  from {
-    opacity: 0;
-    transform: translateY(-100%);
-  }
-
-  to {
-    opacity: 1;
-    transform: none;
   }
 }

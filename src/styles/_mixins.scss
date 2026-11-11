@@ -42,3 +42,23 @@
     border-color: var(--color-text-muted);
   }
 }
+
+// Slide down from above on appearing, for the phone bars shown on scroll. Skipped for reduced
+// motion. The keyframes are emitted only where this is included.
+@mixin slide-in {
+  @media (prefers-reduced-motion: no-preference) {
+    animation: slide-in 0.22s ease-out;
+  }
+
+  @keyframes slide-in {
+    from {
+      opacity: 0;
+      transform: translateY(-100%);
+    }
+
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}

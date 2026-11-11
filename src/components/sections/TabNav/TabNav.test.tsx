@@ -21,7 +21,7 @@ afterEach(cleanup);
 
 test('links every section and marks the current route', () => {
   mockPathname.current = '/projects';
-  render(<TabNav items={ITEMS} />);
+  render(<TabNav items={ITEMS} watchId="hero-end" />);
 
   const nav = screen.getByRole('navigation', { name: 'Sections' });
   expect(nav).toBeDefined();
@@ -32,7 +32,7 @@ test('links every section and marks the current route', () => {
 
 test('keeps a blog tab current on its post pages', () => {
   mockPathname.current = '/blogs/tech/my-first-post';
-  render(<TabNav items={ITEMS} />);
+  render(<TabNav items={ITEMS} watchId="hero-end" />);
 
   expect(screen.getByRole('link', { name: 'Tech blog' }).getAttribute('aria-current')).toBe('page');
 });

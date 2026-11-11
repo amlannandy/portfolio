@@ -16,6 +16,15 @@
   }
 }
 
+// Under the compact header on phones: slide in together with it.
+.stuck {
+  @include mixins.slide-in;
+
+  @include bp.up(md) {
+    animation: none;
+  }
+}
+
 .list {
   @include mixins.container;
 

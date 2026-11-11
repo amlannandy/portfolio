@@ -15,14 +15,9 @@ export default function ProfileLayout({ children }: LayoutProps<'/'>) {
   return (
     <>
       <Header socials={SOCIAL_LINKS} />
-      <CompactHeader
-        name={PROFILE.name}
-        resumeUrl={PROFILE.resumeUrl}
-        socials={SOCIAL_LINKS}
-        watchId={HERO_END_ID}
-      />
+      <CompactHeader profile={PROFILE} socials={SOCIAL_LINKS} watchId={HERO_END_ID} />
       <Hero profile={PROFILE} socials={SOCIAL_LINKS} endMarkerId={HERO_END_ID} />
-      <TabNav items={NAV_ITEMS} />
+      <TabNav items={NAV_ITEMS} watchId={HERO_END_ID} />
       <main className={styles.main}>{children}</main>
     </>
   );
